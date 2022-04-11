@@ -13,7 +13,7 @@ Also ... some people just like CSV files and want to do things in spreadsheets a
 This got a little more complicated than I'd like, but the tl;dr of what I'm trying to figure out is below:
 
 ```mermaid
-graph ingest-process;
+graph TD;
     "this action"-->"csv files";
     "csv files"-->"actions/upload-artifact";
     "actions/upload-artifact"-->"flat data";
