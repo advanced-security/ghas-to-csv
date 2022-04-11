@@ -6,7 +6,7 @@ Simple GitHub Action to scrape the GitHub Advanced Security API and shove it int
 
 Because I really want to see this data for a repository as a time-series to understand it, and [flat data](https://next.github.com/projects/flat-data/) doesn't support paginated APIs (yet?) ... so ... it's really an experiment.
 
-Also ... some people just like CSV files and want to do things in spreadsheets and I'm not here to judge that.  Shine on, you Excel gurus! :sparkling:
+Also ... some people just like CSV files and want to do things in spreadsheets and I'm not here to judge that.  Shine on, you Excel gurus! :sparkles:
 
 ## How
 
