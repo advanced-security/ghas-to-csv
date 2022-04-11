@@ -1,9 +1,10 @@
-FROM python:3.10-slim
+FROM python:3-slim AS builder
+COPY . /app
+WORKDIR /app
+RUN pip3 install --no-cache-dir --target=/app -r requirements.txt
 
-COPY requirements.txt requirements.txt
-
-RUN pip3 install -r requirements.txt
-
-COPY . .
-
-CMD ["python3", "main.py"]
+FROM python:3-slim AS worker
+COPY --from=builder /app /app
+WORKDIR /app
+ENV PYTHONPATH /app
+CMD ["/app/main.py"]
