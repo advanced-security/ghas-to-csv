@@ -1,12 +1,12 @@
-name: Grab code and secret scanning data for Flat
+name: GitHub Advanced Security API to CSV
 
-description: tbd
+description: Grab code and secret scanning data from the GitHub Advanced Security API and put it into a CSV file.
 
 author: Natalie Somersall (@some-natalie)
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
 
 branding:
   color: purple
