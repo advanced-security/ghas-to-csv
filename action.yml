@@ -1,0 +1,13 @@
+name: Grab code and secret scanning data for Flat
+
+description: tbd
+
+author: Natalie Somersall (@some-natalie)
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+branding:
+  color: purple
+  icon: cloud-drizzle
