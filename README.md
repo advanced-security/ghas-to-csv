@@ -13,11 +13,11 @@ Also ... some people just like CSV files and want to do things in spreadsheets a
 This got a little more complicated than I'd like, but the tl;dr of what I'm trying to figure out is below:
 
 ```mermaid
-graph TD;
-    "this action"-->"csv files";
-    "csv files"-->"actions/upload-artifact";
-    "actions/upload-artifact"-->"flat data";
-    "flat data"-->"data goodness";
+graph TD
+    A(GitHub API) -->|this Action| B(fa:fa-file-csv CSV files)
+    B -->|actions/upload-artifact| C(fa:fa-github GitHub)
+    C -->|download| D(fa:fa-file-csv CSV files)
+    C -->|flat-data| E(fa:fa-chart-line data awesomeness)
 ```
 
 Obviously if you're only wanting the CSV file, run this thing, then download the artifacts.  You're ready to rock and roll. :)
