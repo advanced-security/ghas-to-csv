@@ -47,8 +47,16 @@ if __name__ == "__main__":
         print("enterprise reporting not yet implemented, pull requests welcome!")
         pass
     elif report_scope == "organization":
-        print("organization reporting not yet implemented, pull requests welcome!")
-        pass
+        # code scanning
+        cs_list = code_scanning.list_org_code_scanning_alerts(
+            api_endpoint, github_pat, scope_name
+        )
+        code_scanning.write_org_cs_list(cs_list)
+        # secret scanning
+        secrets_list = secret_scanning.get_org_secret_scanning_alerts(
+            api_endpoint, github_pat, scope_name
+        )
+        secret_scanning.write_org_secrets_list(secrets_list)
     elif report_scope == "repository":
         # code scanning
         cs_list = code_scanning.list_code_scanning_alerts(
@@ -59,6 +67,6 @@ if __name__ == "__main__":
         secrets_list = secret_scanning.get_repo_secret_scanning_alerts(
             api_endpoint, github_pat, scope_name
         )
-        secrets_csv = secret_scanning.write_secrets_list(secrets_list)
+        secret_scanning.write_repo_secrets_list(secrets_list)
     else:
         exit("invalid report scope")
