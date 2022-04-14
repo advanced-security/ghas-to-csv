@@ -189,11 +189,7 @@ def write_org_secrets_list(secrets_list):
                 "repo_owner_isadmin",
                 "repo_url",
                 "repo_isfork",
-                "repo_isarchived",
-                "repo_isdisabled",
-                "repo_visibility",
-                "repo_created_at",
-                "repo_updated_at",
+                "repo_isprivate",
             ]
         )
         for alert in secrets_list:
@@ -223,11 +219,7 @@ def write_org_secrets_list(secrets_list):
                     alert["repository"]["owner"]["type"],
                     alert["repository"]["owner"]["site_admin"],
                     alert["repository"]["html_url"],
-                    alert["repository"]["fork"],
-                    alert["repository"]["archived"],
-                    alert["repository"]["disabled"],
-                    alert["repository"]["visibility"],
-                    alert["repository"]["created_at"],
-                    alert["repository"]["updated_at"],
+                    str(alert["repository"]["fork"]),
+                    str(alert["repository"]["private"]),
                 ]
             )

@@ -196,11 +196,7 @@ def write_org_cs_list(cs_list):
                 "repo_owner_isadmin",
                 "repo_url",
                 "repo_isfork",
-                "repo_isarchived",
-                "repo_isdisabled",
-                "repo_visibility",
-                "repo_created_at",
-                "repo_updated_at",
+                "repo_isprivate",
             ]
         )
         for cs in cs_list:
@@ -235,11 +231,7 @@ def write_org_cs_list(cs_list):
                     cs["repository"]["owner"]["type"],
                     cs["repository"]["owner"]["site_admin"],
                     cs["repository"]["html_url"],
-                    cs["repository"]["fork"],
-                    cs["repository"]["archived"],
-                    cs["repository"]["disabled"],
-                    cs["repository"]["visibility"],
-                    cs["repository"]["created_at"],
-                    cs["repository"]["updated_at"],
+                    str(cs["repository"]["fork"]),
+                    str(cs["repository"]["private"]),
                 ]
             )
