@@ -1,6 +1,6 @@
 # GitHub Advanced Security to CSV
 
-Simple GitHub Action to scrape the GitHub Advanced Security API and shove it into a CSV.  
+Simple GitHub Action to scrape the GitHub Advanced Security API and shove it into a CSV.
 
 ## Why?
 
@@ -8,7 +8,7 @@ Because I really want to see this data for a repository as a time-series to unde
 
 Also ... CSV files are the dead-simple ingest point for a ton of other software services you might ~~want~~ have to use in business.  And some people just like CSV files and want to do things in spreadsheets and I'm not here to judge that.  Shine on, you spreadsheet gurus! :sparkles:
 
-## How
+## How?
 
 This got a little more complicated than I'd like, but the tl;dr of what I'm trying to figure out is below:
 
@@ -102,3 +102,7 @@ jobs:
 ```gitignore
 nginx-pid/
 ```
+
+## Notes
+
+[GitHub Copilot](https://copilot.github.com/) wrote most of the Python code in this project.  I mostly just structured the files/functions, wrote some docstrings, accounted for the differences in API versions across the products, and edited what it gave me. :heart:
