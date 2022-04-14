@@ -2,9 +2,15 @@
 
 Simple GitHub Action to scrape the GitHub Advanced Security API and shove it into a CSV.
 
+## What?
+
+GitHub Advanced Security can compile a _ton_ of information on the vulnerabalities in your project's [code](https://github.com/features/security/code), [supply chain](https://github.com/features/security/software-supply-chain), and any [secrets](https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/about-secret-scanning) (like API keys or other sensitive info) that might have been accidentally exposed.  That information is surfaced in the repository, organization, or enterprise [security overview](https://docs.github.com/en/enterprise-cloud@latest/code-security/security-overview/about-the-security-overview) and the API.  The overview has all sorts of neat filters and such you can play with.  The API is great and powers all manner of partner integrations, but there's no direct CSV export.
+
+The API changes a bit based on the version of GitHub you're using.  This Action gathers the GitHub API endpoint to use from the runner's [environment variables](https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/environment-variables#default-environment-variables), so as long as you have a license for Advanced Security, this should work as expected in both GitHub Enterprise Server and GitHub AE.
+
 ## Why?
 
-Because I really want to see this data for a repository as a time-series to understand it, and [Flat Data](https://next.github.com/projects/flat-data/) doesn't support paginated APIs (yet?) ... so ... it's really an experiment and I wanted to play around with the shiny new toy.
+Because I really want to see this data as a time-series to understand it, and [Flat Data](https://next.github.com/projects/flat-data/) doesn't support paginated APIs (yet?) ... so ... it's really an experiment and I wanted to play around with the shiny new toy.
 
 Also ... CSV files are the dead-simple ingest point for a ton of other software services you might ~~want~~ have to use in business.  And some people just like CSV files and want to do things in spreadsheets and I'm not here to judge that.  Shine on, you spreadsheet gurus! :sparkles:
 
@@ -26,7 +32,7 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v0.1.1
+        uses: some-natalie/ghas-to-csv@v0.2.0
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # if you need to set a custom PAT
       - name: Upload CSV
@@ -61,7 +67,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v0.1.1
+        uses: some-natalie/ghas-to-csv@v0.2.0
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository
