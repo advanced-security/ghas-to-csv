@@ -51,8 +51,8 @@ The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and 
 
 |   | GitHub Enterprise Cloud | GitHub Enterprise Server (3.4) | GitHub AE (M2) | Notes |
 | --- | --- | --- | --- | --- |
-| Secret scanning | Repository :white_check_mark:<br>Organization :white_check_mark:<br>Enterprise :white_check_mark: | Repository :white_check_mark:<br>Organization :white_check_mark:<br>Enterprise :white_check_mark: | Repository :white_check_mark: <br>Organization :x: <br>Enterprise :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
-| Code scanning | Repository :white_check_mark:<br>Organization :white_check_mark:<br>Enterprise :x: | Repository :white_check_mark: <br>Organization :x: <br>Enterprise :x: | Repository :white_check_mark: <br>Organization :x: <br>Enterprise :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
+| Secret scanning | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
+| Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:x: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
 | Dependabot | :x: | :x: | :x: | Waiting on [this API](https://github.com/github/roadmap/issues/495) to :ship: |
 
 :information_source:  All of this reporting requires either public repositories or a GitHub Advanced Security license.
