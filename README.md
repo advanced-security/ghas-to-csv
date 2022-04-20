@@ -47,6 +47,18 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
 
 The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and pull requests are welcome! :heart:
 
+## Reporting
+
+|   | GitHub Enterprise Cloud | GitHub Enterprise Server (3.4) | GitHub AE (M2) | Notes |
+| --- | --- | --- | --- | --- |
+| Secret scanning | Repository :white_check_mark:<br>Organization :white_check_mark:<br>Enterprise :white_check_mark: | Repository :white_check_mark:<br>Organization :white_check_mark:<br>Enterprise :white_check_mark: | Repository :white_check_mark: <br>Organization :x: <br>Enterprise :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
+| Code scanning | Repository :white_check_mark:<br>Organization :white_check_mark:<br>Enterprise :x: | Repository :white_check_mark: <br>Organization :x: <br>Enterprise :x: | Repository :white_check_mark: <br>Organization :x: <br>Enterprise :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
+| Dependabot | :x: | :x: | :x: | Waiting on [this API](https://github.com/github/roadmap/issues/495) to :ship: |
+
+:information_source:  All of this reporting requires either public repositories or a GitHub Advanced Security license.
+
+:information_source:  Any item with a :curly_loop: needs some looping logic, since repositories are supported and not higher-level ownership (like orgs or enterprises).  How this looks won't differ much between GHAE or GHES.  In both cases, you'll need an enterprise admin PAT to access the `all_organizations.csv` or `all_repositories.csv` report from `stafftools/reports`, then looping over it in the appropriate scope.  That will tell you about the existence of everything, but not give you permission to access it.  To do that, you'll need to use `ghe-org-admin-promote` in GHES ([link](https://docs.github.com/en/enterprise-server@3.4/admin/configuration/configuring-your-enterprise/command-line-utilities#ghe-org-admin-promote))
+
 ## Using this with Flat Data
 
 Why?  Because look at this beatiful [viewer](https://flatgithub.com).  It's so nice to have a working time-series data set without a ton of drama.
