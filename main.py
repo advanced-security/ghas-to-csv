@@ -44,8 +44,11 @@ else:
 # Do the things!
 if __name__ == "__main__":
     if report_scope == "enterprise":
-        print("enterprise reporting not yet implemented, pull requests welcome!")
-        pass
+        # secret scanning
+        secrets_list = secret_scanning.get_enterprise_secret_scanning_alerts(
+            api_endpoint, github_pat, scope_name
+        )
+        secret_scanning.write_enterprise_secrets_list(secrets_list)
     elif report_scope == "organization":
         # code scanning
         cs_list = code_scanning.list_org_code_scanning_alerts(

@@ -323,7 +323,6 @@ def write_enterprise_secrets_list(secrets_list):
                     "type": "none",
                     "site_admin": "none",
                 }
-            try:
                 writer.writerow(
                     [
                         alert["number"],
@@ -348,7 +347,3 @@ def write_enterprise_secrets_list(secrets_list):
                         str(alert["repository"]["private"]),
                     ]
                 )
-            except:
-                print("Error writing row")
-                print(alert)
-                pass
