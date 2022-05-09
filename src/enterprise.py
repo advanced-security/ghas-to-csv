@@ -1,6 +1,8 @@
 # This holds all the logic for the various enterprise differences.
 
 # Imports
+import csv
+from time import sleep
 import requests
 
 
@@ -22,3 +24,29 @@ def get_enterprise_version(api_endpoint):
             return "unknown version of GitHub"
     else:
         return "GHEC"
+
+
+def get_repo_report(url, github_pat):
+    """
+    Get the `all_repositories.csv` report from GHES / GHAE.
+    """
+    headers = {
+        "Accept": "application/vnd.github.v3+json",
+        "Authorization": "token {}".format(github_pat),
+    }
+    url = "{}/stafftools/reports/all_repositories.csv".format(url)
+    response = requests.get(url, headers=headers)
+    if response.status_code == 202:  # report needs to be generated
+        while response.status_code == 202:
+            print("Waiting a minute for the report to be generated ...")
+            sleep(60)
+            response = requests.get(url, headers=headers)
+    elif response.status_code == 200:  # report is ready
+        print("Report is ready!  Reading it now ...")
+        for row in csv.reader(response.text.splitlines()):  # skip user repos
+            if row[2] == "Organization":
+                yield "{}/{}".format(row[3], row[5])
+            else:
+                pass
+    else:  # something went wrong with fetching the report
+        exit("Error: {}".format(response.status_code))
