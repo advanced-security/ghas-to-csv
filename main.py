@@ -17,7 +17,7 @@ TODO: organization and enterprise wide reporting, dependabot alerts
 """
 
 # Import modules
-from src import code_scanning, secret_scanning
+from src import code_scanning, enterprise, secret_scanning
 import os
 
 # Read in config values
@@ -25,6 +25,11 @@ if os.environ.get("GITHUB_API_ENDPOINT") is None:
     api_endpoint = "https://api.github.com"
 else:
     api_endpoint = os.environ.get("GITHUB_API_ENDPOINT")
+
+if os.environ.get("GITHUB_SERVER_URL") is None:
+    url = "https://github.com"
+else:
+    url = os.environ.get("GITHUB_SERVER_URL")
 
 if os.environ.get("GITHUB_PAT") is None:
     github_pat = os.environ.get("GITHUB_TOKEN")
@@ -49,6 +54,13 @@ if __name__ == "__main__":
             api_endpoint, github_pat, scope_name
         )
         secret_scanning.write_enterprise_secrets_list(secrets_list)
+        # code scanning
+        if enterprise.get_enterprise_version(api_endpoint) != "GHEC":
+            repo_list = enterprise.get_repo_report(url, github_pat)
+            cs_list = code_scanning.list_enterprise_code_scanning_alerts(
+                api_endpoint, github_pat, repo_list
+            )
+            code_scanning.write_enterprise_cs_list(cs_list)
     elif report_scope == "organization":
         # code scanning
         cs_list = code_scanning.list_org_code_scanning_alerts(
