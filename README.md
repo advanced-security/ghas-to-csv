@@ -32,7 +32,7 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v0.2.0
+        uses: some-natalie/ghas-to-csv@v0.3.0
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # if you need to set a custom PAT
       - name: Upload CSV
@@ -43,21 +43,17 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
           if-no-files-found: error
 ```
 
-## But it doesn't do THIS THING
-
-The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and pull requests are welcome! :heart:
-
 ## Reporting
 
 |   | GitHub Enterprise Cloud | GitHub Enterprise Server (3.4) | GitHub AE (M2) | Notes |
 | --- | --- | --- | --- | --- |
 | Secret scanning | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
-| Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:x: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
+| Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:x: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
 | Dependabot | :x: | :x: | :x: | Waiting on [this API](https://github.com/github/roadmap/issues/495) to :ship: |
 
 :information_source:  All of this reporting requires either public repositories or a GitHub Advanced Security license.
 
-:information_source:  Any item with a :curly_loop: needs some looping logic, since repositories are supported and not higher-level ownership (like orgs or enterprises).  How this looks won't differ much between GHAE or GHES.  In both cases, you'll need an enterprise admin PAT to access the `all_organizations.csv` or `all_repositories.csv` report from `stafftools/reports`, then looping over it in the appropriate scope.  That will tell you about the existence of everything, but not give you permission to access it.  To do that, you'll need to use `ghe-org-admin-promote` in GHES ([link](https://docs.github.com/en/enterprise-server@3.4/admin/configuration/configuring-your-enterprise/command-line-utilities#ghe-org-admin-promote))
+:information_source:  Any item with a :curly_loop: needs some looping logic, since repositories are supported and not higher-level ownership (like orgs or enterprises).  How this looks won't differ much between GHAE or GHES.  In both cases, you'll need an enterprise admin PAT to access the `all_organizations.csv` or `all_repositories.csv` report from `stafftools/reports`, then looping over it in the appropriate scope.  That will tell you about the existence of everything, but not give you permission to access it.  To do that, you'll need to use `ghe-org-admin-promote` in GHES ([link](https://docs.github.com/en/enterprise-server@latest/admin/configuration/configuring-your-enterprise/command-line-utilities#ghe-org-admin-promote)) to own all organizations within the server.
 
 ## Using this with Flat Data
 
@@ -79,7 +75,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v0.2.0
+        uses: some-natalie/ghas-to-csv@v0.3.0
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository
@@ -121,6 +117,10 @@ jobs:
 nginx-pid/
 ```
 
-## Notes
+## But it doesn't do THIS THING
+
+The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and pull requests are welcome! :heart:
+
+## Other notes
 
 [GitHub Copilot](https://copilot.github.com/) wrote most of the Python code in this project.  I mostly just structured the files/functions, wrote some docstrings, accounted for the differences in API versions across the products, and edited what it gave me. :heart:
