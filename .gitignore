@@ -130,3 +130,6 @@ dmypy.json
 
 # Notes, etc.
 swap.md
+
+# CSV files
+*.csv
