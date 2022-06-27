@@ -74,10 +74,10 @@ if __name__ == "__main__":
         secret_scanning.write_org_secrets_list(secrets_list)
     elif report_scope == "repository":
         # code scanning
-        cs_list = code_scanning.list_code_scanning_alerts(
+        cs_list = code_scanning.list_repo_code_scanning_alerts(
             api_endpoint, github_pat, scope_name
         )
-        cs_csv = code_scanning.write_cs_list(cs_list)
+        cs_csv = code_scanning.write_repo_cs_list(cs_list)
         # secret scanning
         secrets_list = secret_scanning.get_repo_secret_scanning_alerts(
             api_endpoint, github_pat, scope_name
