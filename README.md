@@ -3,6 +3,7 @@
 Simple GitHub Action to scrape the GitHub Advanced Security API and shove it into a CSV.
 
 > **Note**
+>
 > You need to set and store a PAT because the built-in `GITHUB_TOKEN` doesn't have the appropriate permissions for this Action to get all of the alerts.
 
 ## What?
