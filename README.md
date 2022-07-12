@@ -2,6 +2,9 @@
 
 Simple GitHub Action to scrape the GitHub Advanced Security API and shove it into a CSV.
 
+> **Note**
+> You need to set and store a PAT because the built-in `GITHUB_TOKEN` doesn't have the appropriate permissions for this Action to get all of the alerts.
+
 ## What?
 
 GitHub Advanced Security can compile a _ton_ of information on the vulnerabalities in your project's [code](https://github.com/features/security/code), [supply chain](https://github.com/features/security/software-supply-chain), and any [secrets](https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/about-secret-scanning) (like API keys or other sensitive info) that might have been accidentally exposed.  That information is surfaced in the repository, organization, or enterprise [security overview](https://docs.github.com/en/enterprise-cloud@latest/code-security/security-overview/about-the-security-overview) and the API.  The overview has all sorts of neat filters and such you can play with.  The API is great and powers all manner of partner integrations, but there's no direct CSV export.
@@ -32,9 +35,9 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v0.3.0
+        uses: some-natalie/ghas-to-csv@v0.4.0
         env:
-          GITHUB_PAT: ${{ secrets.PAT }}  # if you need to set a custom PAT
+          GITHUB_PAT: ${{ secrets.PAT }}  # you need to set a PAT
       - name: Upload CSV
         uses: actions/upload-artifact@v3
         with:
@@ -75,7 +78,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v0.3.0
+        uses: some-natalie/ghas-to-csv@v0.4.0
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository

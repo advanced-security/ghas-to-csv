@@ -13,7 +13,7 @@ Outputs:
 - CSV file of secret scanning alerts
 - CSV file of code scanning alerts
 
-TODO: organization and enterprise wide reporting, dependabot alerts
+TODO: dependabot alerts
 """
 
 # Import modules
