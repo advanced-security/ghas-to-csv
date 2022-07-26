@@ -223,7 +223,7 @@ def write_org_cs_list(cs_list):
             )
 
 
-def list_enterprise_code_scanning_alerts(api_endpoint, github_pat, repo_list):
+def list_enterprise_server_code_scanning_alerts(api_endpoint, github_pat, repo_list):
     """
     Get a list of all code scanning alerts on a given enterprise.
 
@@ -252,6 +252,44 @@ def list_enterprise_code_scanning_alerts(api_endpoint, github_pat, repo_list):
         except Exception as e:
             print(e)
     return alerts
+
+
+def list_enterprise_cloud_code_scanning_alerts(
+    api_endpoint, github_pat, enterprise_slug
+):
+    """
+    Get a list of all code scanning alerts on a given enterprise.
+
+    Inputs:
+    - API endpoint (for GHES/GHAE compatibility)
+    - PAT of appropriate scope
+
+    Outputs:
+    - List of _all_ code scanning alerts in enterprise that PAT user can access
+    """
+
+    # Get code scanning alerts
+    url = "{}/enterprises/{}/code-scanning/alerts?per_page=100&page=1".format(
+        api_endpoint, enterprise_slug
+    )
+    headers = {
+        "Authorization": "token {}".format(github_pat),
+        "Accept": "application/vnd.github.v3+json",
+    }
+    response = requests.get(url, headers=headers)
+    response_json = response.json()
+    while "next" in response.links.keys():
+        response = requests.get(response.links["next"]["url"], headers=headers)
+        response_json.extend(response.json())
+
+    print(
+        "Found {} code scanning alerts in {}".format(
+            len(response_json), enterprise_slug
+        )
+    )
+
+    # Return code scanning alerts
+    return response_json
 
 
 def write_enterprise_cs_list(cs_list):
