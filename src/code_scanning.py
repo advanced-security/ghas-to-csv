@@ -307,11 +307,12 @@ def write_enterprise_cs_list(cs_list):
 
     for alert_list in cs_list:
         if type(alert_list) == list:
-            print(alert_list)
             with open("cs_list.csv", "a") as f:
                 writer = csv.writer(f)
                 writer.writerow(
                     [
+                        "repository",
+                        "repo_id",
                         "number",
                         "created_at",
                         "html_url",
@@ -341,6 +342,8 @@ def write_enterprise_cs_list(cs_list):
                         cs["dismissed_reason"] = "none"
                     writer.writerow(
                         [
+                            cs["repository"]["full_name"],
+                            cs["repository"]["id"],
                             cs["number"],
                             cs["created_at"],
                             cs["html_url"],
@@ -363,6 +366,7 @@ def write_enterprise_cs_list(cs_list):
                         ]
                     )
         else:
+            print(type(alert_list))
             with open("excluded_repos.csv", "a") as g:
                 writer = csv.writer(g)
                 writer.writerow([alert_list])
