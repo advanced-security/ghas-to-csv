@@ -57,10 +57,16 @@ if __name__ == "__main__":
         # code scanning
         if enterprise.get_enterprise_version(api_endpoint) != "GHEC":
             repo_list = enterprise.get_repo_report(url, github_pat)
-            cs_list = code_scanning.list_enterprise_code_scanning_alerts(
+            cs_list = code_scanning.list_enterprise_server_code_scanning_alerts(
                 api_endpoint, github_pat, repo_list
             )
-            code_scanning.write_enterprise_cs_list(cs_list)
+            code_scanning.write_enterprise_server_cs_list(cs_list)
+        else:
+            cs_list = code_scanning.list_enterprise_cloud_code_scanning_alerts(
+                api_endpoint, github_pat, scope_name
+            )
+            code_scanning.write_enterprise_cloud_cs_list(cs_list)
+
     elif report_scope == "organization":
         # code scanning
         cs_list = code_scanning.list_org_code_scanning_alerts(

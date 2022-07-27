@@ -223,7 +223,7 @@ def write_org_cs_list(cs_list):
             )
 
 
-def list_enterprise_code_scanning_alerts(api_endpoint, github_pat, repo_list):
+def list_enterprise_server_code_scanning_alerts(api_endpoint, github_pat, repo_list):
     """
     Get a list of all code scanning alerts on a given enterprise.
 
@@ -254,7 +254,7 @@ def list_enterprise_code_scanning_alerts(api_endpoint, github_pat, repo_list):
     return alerts
 
 
-def write_enterprise_cs_list(cs_list):
+def write_enterprise_server_cs_list(cs_list):
     """
     Write a list of code scanning alerts to a csv file.
 
@@ -274,6 +274,8 @@ def write_enterprise_cs_list(cs_list):
                 writer = csv.writer(f)
                 writer.writerow(
                     [
+                        "repository",
+                        "repo_id",
                         "number",
                         "created_at",
                         "html_url",
@@ -303,6 +305,8 @@ def write_enterprise_cs_list(cs_list):
                         cs["dismissed_reason"] = "none"
                     writer.writerow(
                         [
+                            cs["repository"]["full_name"],
+                            cs["repository"]["id"],
                             cs["number"],
                             cs["created_at"],
                             cs["html_url"],
@@ -328,3 +332,118 @@ def write_enterprise_cs_list(cs_list):
             with open("excluded_repos.csv", "a") as g:
                 writer = csv.writer(g)
                 writer.writerow([alert_list])
+
+
+def list_enterprise_cloud_code_scanning_alerts(
+    api_endpoint, github_pat, enterprise_slug
+):
+    """
+    Get a list of all code scanning alerts on a given enterprise.
+
+    Inputs:
+    - API endpoint (for GHES/GHAE compatibility)
+    - PAT of appropriate scope
+
+    Outputs:
+    - List of _all_ code scanning alerts in enterprise that PAT user can access
+    """
+
+    # Get code scanning alerts
+    url = "{}/enterprises/{}/code-scanning/alerts?per_page=100&page=1".format(
+        api_endpoint, enterprise_slug
+    )
+    headers = {
+        "Authorization": "token {}".format(github_pat),
+        "Accept": "application/vnd.github.v3+json",
+    }
+    response = requests.get(url, headers=headers)
+    response_json = response.json()
+    while "next" in response.links.keys():
+        response = requests.get(response.links["next"]["url"], headers=headers)
+        response_json.extend(response.json())
+
+    print(
+        "Found {} code scanning alerts in {}".format(
+            len(response_json), enterprise_slug
+        )
+    )
+
+    # Return code scanning alerts
+    return response_json
+
+
+def write_enterprise_cloud_cs_list(cs_list):
+    """
+    Write a list of code scanning alerts to a csv file.
+
+    Inputs:
+    - List from list_enterprise_code_scanning_alerts function, which contains
+        strings and lists of dictionaries for the alerts.
+
+    Outputs:
+    - CSV file of code scanning alerts
+    - CSV file of repositories not accessible or without code scanning enabled
+    """
+
+    with open("cs_list.csv", "a") as f:
+        writer = csv.writer(f)
+        writer.writerow(
+            [
+                "repository",
+                "repo_id",
+                "number",
+                "created_at",
+                "html_url",
+                "state",
+                "fixed_at",
+                "dismissed_by",
+                "dismissed_at",
+                "dismissed_reason",
+                "rule_id",
+                "rule_severity",
+                "rule_tags",
+                "rule_description",
+                "rule_name",
+                "tool_name",
+                "tool_version",
+                "most_recent_instance_ref",
+                "most_recent_instance_state",
+                "most_recent_instance_sha",
+                "instances_url",
+            ]
+        )
+        for cs in cs_list:  # loop through each alert in the list
+            if cs["state"] == "open":
+                cs["fixed_at"] = "none"
+                cs["dismissed_by"] = "none"
+                cs["dismissed_at"] = "none"
+                cs["dismissed_reason"] = "none"
+            writer.writerow(
+                [
+                    cs["repository"]["full_name"],
+                    cs["repository"]["id"],
+                    cs["number"],
+                    cs["created_at"],
+                    cs["html_url"],
+                    cs["state"],
+                    cs["fixed_at"],
+                    cs["dismissed_by"],
+                    cs["dismissed_at"],
+                    cs["dismissed_reason"],
+                    cs["rule"]["id"],
+                    cs["rule"]["severity"],
+                    cs["rule"]["tags"],
+                    cs["rule"]["description"],
+                    cs["rule"]["name"],
+                    cs["tool"]["name"],
+                    cs["tool"]["version"],
+                    cs["most_recent_instance"]["ref"],
+                    cs["most_recent_instance"]["state"],
+                    cs["most_recent_instance"]["commit_sha"],
+                    cs["instances_url"],
+                ]
+            )
+        else:
+            with open("excluded_repos.csv", "a") as g:
+                writer = csv.writer(g)
+                writer.writerow([cs])

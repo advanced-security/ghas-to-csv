@@ -336,8 +336,6 @@ def write_enterprise_secrets_list(secrets_list):
                         alert["resolved_by"]["site_admin"],
                         alert["secret_type"],
                         alert["secret_type_display_name"],
-                        alert["secret_type"],
-                        alert["secret_type_display_name"],
                         alert["repository"]["full_name"],
                         alert["repository"]["owner"]["login"],
                         alert["repository"]["owner"]["type"],
