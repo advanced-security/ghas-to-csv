@@ -49,10 +49,10 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
 
 ## Reporting
 
-|   | GitHub Enterprise Cloud | GitHub Enterprise Server (3.4) | GitHub AE (M2) | Notes |
+|   | GitHub Enterprise Cloud | GitHub Enterprise Server (3.5) | GitHub AE (M2) | Notes |
 | --- | --- | --- | --- | --- |
 | Secret scanning | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
-| Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
+| Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:white_check_mark: Org<br>:curly_loop: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
 | Dependabot | :x: | :x: | :x: | Waiting on [this API](https://github.com/github/roadmap/issues/495) to :ship: |
 
 :information_source:  All of this reporting requires either public repositories or a GitHub Advanced Security license.
