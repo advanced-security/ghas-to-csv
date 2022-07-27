@@ -60,11 +60,12 @@ if __name__ == "__main__":
             cs_list = code_scanning.list_enterprise_server_code_scanning_alerts(
                 api_endpoint, github_pat, repo_list
             )
+            code_scanning.write_enterprise_server_cs_list(cs_list)
         else:
             cs_list = code_scanning.list_enterprise_cloud_code_scanning_alerts(
                 api_endpoint, github_pat, scope_name
             )
-        code_scanning.write_enterprise_cs_list(cs_list)
+            code_scanning.write_enterprise_cloud_cs_list(cs_list)
 
     elif report_scope == "organization":
         # code scanning
