@@ -47,6 +47,28 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
           if-no-files-found: error
 ```
 
+To run this targeting an organization, here's an example:
+
+```yaml
+      - name: CSV export
+        uses: some-natalie/ghas-to-csv@v0.5.0
+        env:
+          GITHUB_PAT: ${{ secrets.PAT }}
+          GITHUB_REPORT_SCOPE: "organization"
+          SCOPE_NAME: "org-name-goes-here"
+```
+
+Or for an enterprise:
+
+```yaml
+      - name: CSV export
+        uses: some-natalie/ghas-to-csv@v0.5.0
+        env:
+          GITHUB_PAT: ${{ secrets.PAT }}
+          GITHUB_REPORT_SCOPE: "enterprise"
+          SCOPE_NAME: "enterprise-slug-goes-here"
+```
+
 ## Reporting
 
 |   | GitHub Enterprise Cloud | GitHub Enterprise Server (3.5) | GitHub AE (M2) | Notes |
