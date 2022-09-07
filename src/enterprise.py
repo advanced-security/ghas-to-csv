@@ -1,7 +1,7 @@
 # This holds all the logic for the various enterprise differences.
 
 # Imports
-import csv
+from defusedcsv import csv
 from time import sleep
 import requests
 

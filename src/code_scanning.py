@@ -1,7 +1,7 @@
 # This holds all the things that do stuff for code scanning API
 
 # Imports
-import csv
+from defusedcsv import csv
 import requests
 
 
