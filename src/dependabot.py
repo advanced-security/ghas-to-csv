@@ -40,7 +40,7 @@ def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
     print("Found {} dependabot alerts in {}".format(len(response_json), repo_name))
 
     # Return code scanning alerts
-    return response.json()
+    return response_json
 
 
 def write_repo_dependabot_list(dependabot_list):
