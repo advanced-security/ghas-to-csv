@@ -36,7 +36,7 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v1
+        uses: some-natalie/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # you need to set a PAT
       - name: Upload CSV
@@ -51,7 +51,7 @@ To run this targeting an organization, here's an example:
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v1
+        uses: some-natalie/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
           GITHUB_REPORT_SCOPE: "organization"
@@ -62,7 +62,7 @@ Or for an enterprise:
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v1
+        uses: some-natalie/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
           GITHUB_REPORT_SCOPE: "enterprise"
@@ -75,7 +75,7 @@ Or for an enterprise:
 | --- | --- | --- | --- | --- |
 | Secret scanning | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
 | Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:white_check_mark: Org<br>:curly_loop: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
-| Dependabot | :x: | :x: | :x: | Waiting on [this API](https://github.com/github/roadmap/issues/495) to :ship: |
+| Dependabot | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | :x: | :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/dependabot/alerts) |
 
 :information_source:  All of this reporting requires either public repositories or a GitHub Advanced Security license.
 
@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v1
+        uses: some-natalie/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository
