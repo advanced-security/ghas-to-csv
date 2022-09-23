@@ -36,9 +36,7 @@ def list_repo_code_scanning_alerts(api_endpoint, github_pat, repo_name):
         response = requests.get(response.links["next"]["url"], headers=headers)
         response_json.extend(response.json())
 
-        print(
-            "Found {} code scanning alerts in {}".format(len(response_json), repo_name)
-        )
+    print("Found {} code scanning alerts in {}".format(len(response_json), repo_name))
 
     # Return code scanning alerts
     return response_json
