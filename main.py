@@ -17,7 +17,7 @@ TODO: dependabot alerts
 """
 
 # Import modules
-from src import code_scanning, enterprise, secret_scanning
+from src import code_scanning, dependabot, enterprise, secret_scanning
 import os
 
 # Read in config values
@@ -84,6 +84,14 @@ if __name__ == "__main__":
             api_endpoint, github_pat, scope_name
         )
         code_scanning.write_repo_cs_list(cs_list)
+        # dependabot alerts
+        if enterprise.get_enterprise_version(api_endpoint) == "GHEC":
+            dependabot_list = dependabot.list_repo_dependabot_alerts(
+                api_endpoint, github_pat, scope_name
+            )
+            dependabot.write_repo_dependabot_list(dependabot_list)
+        else:
+            pass
         # secret scanning
         secrets_list = secret_scanning.get_repo_secret_scanning_alerts(
             api_endpoint, github_pat, scope_name
