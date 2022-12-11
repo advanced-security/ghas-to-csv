@@ -72,6 +72,7 @@ def write_repo_dependabot_list(dependabot_list):
                 "severity",
                 "ghsa_id",
                 "cve_id",
+                "cvss_score",
             ]
         )
         for alert in dependabot_list:
@@ -103,5 +104,6 @@ def write_repo_dependabot_list(dependabot_list):
                     alert["security_vulnerability"]["severity"],
                     alert["security_advisory"]["ghsa_id"],
                     alert["security_advisory"]["cve_id"],
+                    alert["security_advisory"]["cvss"]["score"],
                 ]
             )
