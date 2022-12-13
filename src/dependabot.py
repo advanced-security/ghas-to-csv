@@ -108,6 +108,7 @@ def write_repo_dependabot_list(dependabot_list):
                 ]
             )
 
+
 def list_org_dependabot_alerts(api_endpoint, github_pat, org_name):
     """
     Get a list of all dependabot alerts on a given organization.
@@ -179,7 +180,9 @@ def list_enterprise_dependabot_alerts(api_endpoint, github_pat, enterprise_slug)
         )
         response_json.extend(response.json())
 
-    print("Found {} dependabot alerts in {}".format(len(response_json), enterprise_slug))
+    print(
+        "Found {} dependabot alerts in {}".format(len(response_json), enterprise_slug)
+    )
 
     # Return dependabot alerts
     return response_json
