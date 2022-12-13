@@ -445,7 +445,3 @@ def write_enterprise_cloud_cs_list(cs_list):
                     cs["instances_url"],
                 ]
             )
-        else:
-            with open("excluded_repos.csv", "a") as g:
-                writer = csv.writer(g)
-                writer.writerow([cs])
