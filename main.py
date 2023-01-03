@@ -66,6 +66,14 @@ if __name__ == "__main__":
                 api_endpoint, github_pat, scope_name
             )
             code_scanning.write_enterprise_cloud_cs_list(cs_list)
+        # dependabot alerts
+        if enterprise.get_enterprise_version(api_endpoint) == "GHEC":
+            dependabot_list = dependabot.list_enterprise_dependabot_alerts(
+                api_endpoint, github_pat, scope_name
+            )
+            dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
+        else:
+            pass
 
     elif report_scope == "organization":
         # code scanning
@@ -73,6 +81,14 @@ if __name__ == "__main__":
             api_endpoint, github_pat, scope_name
         )
         code_scanning.write_org_cs_list(cs_list)
+        # dependabot alerts
+        if enterprise.get_enterprise_version(api_endpoint) == "GHEC":
+            dependabot_list = dependabot.list_org_dependabot_alerts(
+                api_endpoint, github_pat, scope_name
+            )
+            dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
+        else:
+            pass
         # secret scanning
         secrets_list = secret_scanning.get_org_secret_scanning_alerts(
             api_endpoint, github_pat, scope_name

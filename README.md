@@ -75,7 +75,7 @@ Or for an enterprise:
 | --- | --- | --- | --- | --- |
 | Secret scanning | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
 | Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:white_check_mark: Org<br>:curly_loop: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
-| Dependabot | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | :x: | :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/dependabot/alerts) |
+| Dependabot | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :x: | :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/dependabot/alerts) |
 
 :information_source:  All of this reporting requires either public repositories or a GitHub Advanced Security license.
 
