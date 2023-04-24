@@ -8,7 +8,7 @@ Simple GitHub Action to scrape the GitHub Advanced Security API and shove it int
 
 ## What?
 
-GitHub Advanced Security can compile a _ton_ of information on the vulnerabalities in your project's [code](https://github.com/features/security/code), [supply chain](https://github.com/features/security/software-supply-chain), and any [secrets](https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/about-secret-scanning) (like API keys or other sensitive info) that might have been accidentally exposed.  That information is surfaced in the repository, organization, or enterprise [security overview](https://docs.github.com/en/enterprise-cloud@latest/code-security/security-overview/about-the-security-overview) and the API.  The overview has all sorts of neat filters and such you can play with.  The API is great and powers all manner of partner integrations, but there's no direct CSV export.
+GitHub Advanced Security can compile a _ton_ of information on the vulnerabilities in your project's [code](https://github.com/features/security/code), [supply chain](https://github.com/features/security/software-supply-chain), and any [secrets](https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/about-secret-scanning) (like API keys or other sensitive info) that might have been accidentally exposed.  That information is surfaced in the repository, organization, or enterprise [security overview](https://docs.github.com/en/enterprise-cloud@latest/code-security/security-overview/about-the-security-overview) and the API.  The overview has all sorts of neat filters and such you can play with.  The API is great and powers all manner of partner integrations, but there's no direct CSV export.
 
 The API changes a bit based on the version of GitHub you're using.  This Action gathers the GitHub API endpoint to use from the runner's [environment variables](https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/environment-variables#default-environment-variables), so as long as you have a license for Advanced Security, this should work as expected in GitHub Enterprise Server and GitHub AE too.
 
@@ -30,13 +30,13 @@ graph TD
     C -->|flat-data| E(fa:fa-chart-line data awesomeness)
 ```
 
-Obviously if you're only wanting the CSV file, run this thing, then download the artifact.  It's a zip file with the CSV file(s).  You're ready to rock and roll. :)
+Obviously if you're only wanting the CSV file, run this thing, then download the artifact.  It's a zip file with the CSV file(s).  You're ready to rock and roll. :smile:
 
 An example of use is below.  Note that the custom inputs, such as if you are wanting data on a different repo and need additional scopes for that, are set as environmental variables:
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # you need to set a PAT
       - name: Upload CSV
@@ -51,7 +51,7 @@ To run this targeting an organization, here's an example:
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
           GITHUB_REPORT_SCOPE: "organization"
@@ -62,7 +62,7 @@ Or for an enterprise:
 
 ```yaml
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
           GITHUB_REPORT_SCOPE: "enterprise"
@@ -83,7 +83,7 @@ Or for an enterprise:
 
 ## Using this with Flat Data
 
-Why?  Because look at this beatiful [viewer](https://flatgithub.com).  It's so nice to have a working time-series data set without a ton of drama.
+Why?  Because look at this beautiful [viewer](https://flatgithub.com).  It's so nice to have a working time-series data set without a ton of drama.
 
 ![flat-viewer](images/flat-viewer.png)
 
@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: CSV export
-        uses: some-natalie/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v2
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository
