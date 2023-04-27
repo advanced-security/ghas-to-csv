@@ -21,10 +21,10 @@ from src import code_scanning, dependabot, enterprise, secret_scanning
 import os
 
 # Read in config values
-if os.environ.get("GITHUB_API_ENDPOINT") is None:
+if os.environ.get("GITHUB_API_URL") is None:
     api_endpoint = "https://api.github.com"
 else:
-    api_endpoint = os.environ.get("GITHUB_API_ENDPOINT")
+    api_endpoint = os.environ.get("GITHUB_API_URL")
 
 if os.environ.get("GITHUB_SERVER_URL") is None:
     url = "https://github.com"
