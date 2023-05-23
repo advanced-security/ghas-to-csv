@@ -22,6 +22,7 @@ Here are a few things you can do that will increase the likelihood of your pull 
 - Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
 ## Local development
+
 After cloning your forked repository, you can set up your development environment by running the following commands:
 
 ```bash

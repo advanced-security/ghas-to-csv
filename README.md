@@ -70,6 +70,7 @@ Or for an enterprise:
 ```
 
 The list of all available options that can be set as environmental variables is below:
+
 - `GITHUB_API_URL`: The URL of the GitHub API. Default value: `https://api.github.com`.
 - `GITHUB_SERVER_URL`: The URL of the GitHub server. Default value: `https://github.com`.
 - `GITHUB_PAT` or `GITHUB_TOKEN`: The personal access token (PAT) or token for authenticating with the GitHub API. If `GITHUB_PAT` is not set, the value of `GITHUB_TOKEN` is used if it is set. If neither is set, an error occurs.
