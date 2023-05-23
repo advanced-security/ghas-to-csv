@@ -133,3 +133,6 @@ swap.md
 
 # CSV files
 *.csv
+
+# Ignore macos files
+.DS_Store

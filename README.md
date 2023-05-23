@@ -69,13 +69,35 @@ Or for an enterprise:
           SCOPE_NAME: "enterprise-slug-goes-here"
 ```
 
+The list of all available options that can be set as environmental variables is below:
+- `GITHUB_API_URL`: The URL of the GitHub API. Default value: `https://api.github.com`.
+- `GITHUB_SERVER_URL`: The URL of the GitHub server. Default value: `https://github.com`.
+- `GITHUB_PAT` or `GITHUB_TOKEN`: The personal access token (PAT) or token for authenticating with the GitHub API. If `GITHUB_PAT` is not set, the value of `GITHUB_TOKEN` is used if it is set. If neither is set, an error occurs.
+- `GITHUB_REPORT_SCOPE`: The scope of the report to generate. Valid values are `repository` (default), `organization`  or `enterprise`.
+- `SCOPE_NAME` or `GITHUB_REPOSITORY`: The name of the repository, organization or enterprise to generate the report for. If `SCOPE_NAME` is not set, the value of `GITHUB_REPOSITORY` is used if it is set. If neither is set, an error occurs.
+- `FEATURES`: A comma-separated list of features to include in the report. Valid values are `codescanning`, `secretscanning`, `dependabot` or simply `all`. Default value: `all`.
+
+The first two are only needed if you're running this in a GitHub Enterprise Server or GitHub AE environment.  The last one is useful if you only want to get data on a specific feature.  For example, if you only want to get data on secret scanning, you can set `FEATURES` to `secretscanning`. Here's just another example how you would configure this on a GitHub Enterprise Server:
+
+```yaml
+      - name: CSV export
+        uses: advanced-security/ghas-to-csv@v2
+        env:
+          GITHUB_PAT: ${{ secrets.PAT }}
+          GITHUB_API_URL: "https://github.example.com/api/v3"
+          GITHUB_SERVER_URL: "https://github.example.com"
+          GITHUB_REPORT_SCOPE: "enterprise"
+          SCOPE_NAME: "enterprise-slug-goes-here"
+          FEATURES: "secretscanning,codescanning"
+```
+
 ## Reporting
 
 |   | GitHub Enterprise Cloud | GitHub Enterprise Server (3.5+) | GitHub AE (M2) | Notes |
 | --- | --- | --- | --- | --- |
 | Secret scanning | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:x: Org<br>:x: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/secret-scanning) |
-| Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:white_check_mark: Org<br>:curly_loop: Enterprise |  :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
-| Dependabot | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :x: | :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/dependabot/alerts) |
+| Code scanning |  :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo<br>:white_check_mark: Org<br>:curly_loop: Enterprise (3.5, 3.6) <br>:white_check_mark: Enterprise (3.7+) |  :white_check_mark: Repo<br>:x: Org<br>:curly_loop: Enterprise | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/reference/code-scanning) |
+| Dependabot | :white_check_mark: Repo<br>:white_check_mark: Org<br>:white_check_mark: Enterprise | :white_check_mark: Repo (3.8+)<br>:white_check_mark: Org (3.8+)<br>:white_check_mark: Enterprise (3.8+)  | :x: | [API docs](https://docs.github.com/en/enterprise-cloud@latest/rest/dependabot/alerts) |
 
 :information_source:  All of this reporting requires either public repositories or a GitHub Advanced Security license.
 
@@ -143,7 +165,8 @@ nginx-pid/
 
 ## But it doesn't do THIS THING
 
-The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and pull requests are welcome! :heart:
+The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and pull requests are welcome! :heart:. 
+See [CONTRIBUTING](CONTRIBUTING.md) for more information.
 
 ## Other notes
 
