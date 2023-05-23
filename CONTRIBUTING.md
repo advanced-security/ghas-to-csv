@@ -46,7 +46,6 @@ You can now run the script locally:
 python3 main.py
 ```
 
-
 ## Resources
 
 - [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)

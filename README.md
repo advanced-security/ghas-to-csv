@@ -166,7 +166,7 @@ nginx-pid/
 
 ## But it doesn't do THIS THING
 
-The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and pull requests are welcome! :heart:. 
+The API docs are [here](https://docs.github.com/en/enterprise-cloud@latest) and pull requests are welcome! :heart:.
 See [CONTRIBUTING](CONTRIBUTING.md) for more information.
 
 ## Other notes
