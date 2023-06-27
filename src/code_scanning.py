@@ -31,6 +31,10 @@ def list_repo_code_scanning_alerts(api_endpoint, github_pat, repo_name):
         return "need permission to access,{}".format(repo_name)  # don't have permission
     if response.status_code == 403:
         return "need to enable GHAS,{}".format(repo_name)  # no GHAS
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(repo_name, response.status_code, response.text)
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(response.links["next"]["url"], headers=headers)
@@ -132,6 +136,10 @@ def list_org_code_scanning_alerts(api_endpoint, github_pat, org_name):
         "Accept": "application/vnd.github.v3+json",
     }
     response = requests.get(url, headers=headers)
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(org_name, response.status_code, response.text)
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(response.links["next"]["url"], headers=headers)
@@ -359,6 +367,12 @@ def list_enterprise_cloud_code_scanning_alerts(
         "Accept": "application/vnd.github.v3+json",
     }
     response = requests.get(url, headers=headers)
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(
+                enterprise_slug, response.status_code, response.text
+            )
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(response.links["next"]["url"], headers=headers)

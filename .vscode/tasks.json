@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "super-linter",
+            "command": "docker",
+            "args": [
+                "run",
+                "--rm",
+                "-e", "RUN_LOCAL=true",
+                "--env-file", ".github/linters/super-linter.env",
+                "-v", "${workspaceFolder}:/tmp/lint",
+                "github/super-linter:slim-v5"
+            ]
+        }
+    ]
+}
