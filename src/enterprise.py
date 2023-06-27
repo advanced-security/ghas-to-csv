@@ -18,6 +18,12 @@ def get_enterprise_version(api_endpoint):
     if api_endpoint != "https://api.github.com":
         url = "{}/meta".format(api_endpoint)
         response = requests.get(url)
+        if not response.ok:
+            raise Exception(
+                "API error,{},{},{}".format(
+                    api_endpoint, response.status_code, response.text
+                )
+            )
         if "installed_version" in response.json():
             return response.json()["installed_version"]
         else:
@@ -36,6 +42,12 @@ def get_repo_report(url, github_pat):
     }
     url = "{}/stafftools/reports/all_repositories.csv".format(url)
     response = requests.get(url, headers=headers)
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(
+                url, response.status_code, response.text
+            )
+        )
     if response.status_code == 202:  # report needs to be generated
         while response.status_code == 202:
             print("Waiting a minute for the report to be generated ...")

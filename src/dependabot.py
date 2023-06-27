@@ -29,6 +29,12 @@ def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
             "Accept": "application/vnd.github+json",
         },
     )
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(
+                repo_name, response.status_code, response.text
+            )
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(
@@ -133,6 +139,12 @@ def list_org_dependabot_alerts(api_endpoint, github_pat, org_name):
             "Accept": "application/vnd.github+json",
         },
     )
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(
+                org_name, response.status_code, response.text
+            )
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(
@@ -172,6 +184,12 @@ def list_enterprise_dependabot_alerts(api_endpoint, github_pat, enterprise_slug)
             "Accept": "application/vnd.github+json",
         },
     )
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(
+                enterprise_slug, response.status_code, response.text
+            )
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(
