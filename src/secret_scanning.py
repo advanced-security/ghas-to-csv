@@ -35,9 +35,7 @@ def get_repo_secret_scanning_alerts(api_endpoint, github_pat, repo_name):
         return ["not found"]
     if not response.ok:
         raise Exception(
-            "API error,{},{},{}".format(
-                repo_name, response.status_code, response.text
-            )
+            "API error,{},{},{}".format(repo_name, response.status_code, response.text)
         )
     response_json = response.json()
     while "next" in response.links.keys():
@@ -144,9 +142,7 @@ def get_org_secret_scanning_alerts(api_endpoint, github_pat, org_name):
         return ["not found"]
     if not response.ok:
         raise Exception(
-            "API error,{},{},{}".format(
-                org_name, response.status_code, response.text
-            )
+            "API error,{},{},{}".format(org_name, response.status_code, response.text)
         )
     response_json = response.json()
     while "next" in response.links.keys():

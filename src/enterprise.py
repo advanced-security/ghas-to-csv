@@ -44,9 +44,7 @@ def get_repo_report(url, github_pat):
     response = requests.get(url, headers=headers)
     if not response.ok:
         raise Exception(
-            "API error,{},{},{}".format(
-                url, response.status_code, response.text
-            )
+            "API error,{},{},{}".format(url, response.status_code, response.text)
         )
     if response.status_code == 202:  # report needs to be generated
         while response.status_code == 202:

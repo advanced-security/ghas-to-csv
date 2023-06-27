@@ -31,9 +31,7 @@ def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
     )
     if not response.ok:
         raise Exception(
-            "API error,{},{},{}".format(
-                repo_name, response.status_code, response.text
-            )
+            "API error,{},{},{}".format(repo_name, response.status_code, response.text)
         )
     response_json = response.json()
     while "next" in response.links.keys():
@@ -141,9 +139,7 @@ def list_org_dependabot_alerts(api_endpoint, github_pat, org_name):
     )
     if not response.ok:
         raise Exception(
-            "API error,{},{},{}".format(
-                org_name, response.status_code, response.text
-            )
+            "API error,{},{},{}".format(org_name, response.status_code, response.text)
         )
     response_json = response.json()
     while "next" in response.links.keys():
