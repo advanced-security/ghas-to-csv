@@ -21,6 +21,31 @@ Here are a few things you can do that will increase the likelihood of your pull 
 - Keep your change as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
 - Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
+## Local development
+
+After cloning your forked repository, you can set up your development environment by running the following commands:
+
+```bash
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip3 install -r requirements.txt
+```
+
+To execute the python script `main.py` locally you will need to setup the required environment variables. You can do this by making a copy of `.env-sample` into `.env` file in the root of the project and edit the values to match your environment.
+
+```bash
+source .env
+```
+
+You can now run the script locally:
+
+```bash
+python3 main.py
+```
+
 ## Resources
 
 - [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
