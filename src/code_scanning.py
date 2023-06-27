@@ -32,7 +32,9 @@ def list_repo_code_scanning_alerts(api_endpoint, github_pat, repo_name):
     if response.status_code == 403:
         return "need to enable GHAS,{}".format(repo_name)  # no GHAS
     if not response.ok:
-        raise Exception("API error,{},{},{}".format(repo_name, response.status_code, response.text)) # unhandled API error
+        raise Exception(
+            "API error,{},{},{}".format(repo_name, response.status_code, response.text)
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(response.links["next"]["url"], headers=headers)
@@ -135,7 +137,9 @@ def list_org_code_scanning_alerts(api_endpoint, github_pat, org_name):
     }
     response = requests.get(url, headers=headers)
     if not response.ok:
-        raise Exception("API error,{},{},{}".format(org_name, response.status_code, response.text)) # unhandled API error
+        raise Exception(
+            "API error,{},{},{}".format(org_name, response.status_code, response.text)
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(response.links["next"]["url"], headers=headers)
@@ -364,7 +368,11 @@ def list_enterprise_cloud_code_scanning_alerts(
     }
     response = requests.get(url, headers=headers)
     if not response.ok:
-        raise Exception("API error,{},{},{}".format(enterprise_slug, response.status_code, response.text)) # unhandled API error
+        raise Exception(
+            "API error,{},{},{}".format(
+                enterprise_slug, response.status_code, response.text
+            )
+        )
     response_json = response.json()
     while "next" in response.links.keys():
         response = requests.get(response.links["next"]["url"], headers=headers)
