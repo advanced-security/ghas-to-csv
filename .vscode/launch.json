@@ -5,14 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: main.py",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
+                //"GITHUB_SERVER_URL": "https://ctcampbell-01797a1ba7830bfdd.ghe-test.net",
+                //"GITHUB_API_URL": "https://ctcampbell-01797a1ba7830bfdd.ghe-test.net/api/v3",
                 "GITHUB_PAT": "${input:gh_pat}",
+                //"GITHUB_REPORT_SCOPE": "enterprise",
                 "SCOPE_NAME": "ctcampbell/webgoat"
             }
         }

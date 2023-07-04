@@ -29,10 +29,6 @@ def get_repo_secret_scanning_alerts(api_endpoint, github_pat, repo_name):
             "Accept": "application/vnd.github.v3+json",
         },
     )
-    # The secret scanning API returns a code of 404 if there are no alerts,
-    # secret scanning is disabled, or the repository is public.
-    if response.status_code == 404:
-        return ["not found"]
     if not response.ok:
         raise Exception(
             "API error,{},{},{}".format(repo_name, response.status_code, response.text)
@@ -136,10 +132,6 @@ def get_org_secret_scanning_alerts(api_endpoint, github_pat, org_name):
             "Accept": "application/vnd.github.v3+json",
         },
     )
-    # The secret scanning API returns a code of 404 if there are no alerts,
-    # secret scanning is disabled, or the repository is public.
-    if response.status_code == 404:
-        return ["not found"]
     if not response.ok:
         raise Exception(
             "API error,{},{},{}".format(org_name, response.status_code, response.text)
@@ -258,10 +250,6 @@ def get_enterprise_secret_scanning_alerts(api_endpoint, github_pat, enterprise_s
             "Accept": "application/vnd.github.v3+json",
         },
     )
-    # The secret scanning API returns a code of 404 if there are no alerts,
-    # secret scanning is disabled, or the repository is public.
-    if response.status_code == 404:
-        return ["not found"]
     if not response.ok:
         raise Exception(
             "API error,{},{},{}".format(

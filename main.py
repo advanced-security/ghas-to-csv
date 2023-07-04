@@ -20,6 +20,9 @@ Outputs:
 from src import code_scanning, dependabot, enterprise, secret_scanning
 import os
 
+# Possible strings indicating feature is not enabled
+secret_scanning_disabled_strings = ["secret scanning is not enabled", "secret scanning is disabled"]
+dependabot_disabled_strings = ["dependabot alerts are not enabled", "dependabot alerts are disabled"]
 
 # Define the available features
 FEATURES = ["secretscanning", "codescanning", "dependabot"]
@@ -72,10 +75,15 @@ if __name__ == "__main__":
     if report_scope == "enterprise":
         # secret scanning
         if "secretscanning" in features:
-            secrets_list = secret_scanning.get_enterprise_secret_scanning_alerts(
-                api_endpoint, github_pat, scope_name
-            )
-            secret_scanning.write_enterprise_secrets_list(secrets_list)
+            try:
+                secrets_list = secret_scanning.get_enterprise_secret_scanning_alerts(
+                    api_endpoint, github_pat, scope_name
+                )
+                secret_scanning.write_enterprise_secrets_list(secrets_list)
+            except Exception as e:
+                if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
+                    print("Skipping Secret Scanning as it is not enabled.")
+                    print(e)
         # code scanning
         if "codescanning" in features:
             version = enterprise.get_enterprise_version(api_endpoint)
@@ -94,10 +102,15 @@ if __name__ == "__main__":
                 code_scanning.write_enterprise_cloud_cs_list(cs_list)
         # dependabot alerts
         if "dependabot" in features:
-            dependabot_list = dependabot.list_enterprise_dependabot_alerts(
-                api_endpoint, github_pat, scope_name
-            )
-            dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
+            try:
+                dependabot_list = dependabot.list_enterprise_dependabot_alerts(
+                    api_endpoint, github_pat, scope_name
+                )
+                dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
+            except Exception as e:
+                if any(x in str(e).lower() for x in dependabot_disabled_strings):
+                    print("Skipping Dependabot as it is not enabled.")
+                    print(e)
     # organization scope
     elif report_scope == "organization":
         # code scanning
@@ -108,17 +121,26 @@ if __name__ == "__main__":
             code_scanning.write_org_cs_list(cs_list)
         # dependabot alerts
         if "dependabot" in features:
-            dependabot_list = dependabot.list_org_dependabot_alerts(
-                api_endpoint, github_pat, scope_name
-            )
-            dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
-
+            try:
+                dependabot_list = dependabot.list_org_dependabot_alerts(
+                    api_endpoint, github_pat, scope_name
+                )
+                dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
+            except Exception as e:
+                if any(x in str(e).lower() for x in dependabot_disabled_strings):
+                    print("Skipping Dependabot as it is not enabled.")
+                    print(e)
         # secret scanning
         if "secretscanning" in features:
-            secrets_list = secret_scanning.get_org_secret_scanning_alerts(
-                api_endpoint, github_pat, scope_name
-            )
-            secret_scanning.write_org_secrets_list(secrets_list)
+            try:
+                secrets_list = secret_scanning.get_org_secret_scanning_alerts(
+                    api_endpoint, github_pat, scope_name
+                )
+                secret_scanning.write_org_secrets_list(secrets_list)
+            except Exception as e:
+                if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
+                    print("Skipping Secret Scanning as it is not enabled.")
+                    print(e)
     # repository scope
     elif report_scope == "repository":
         # code scanning
@@ -129,16 +151,25 @@ if __name__ == "__main__":
             code_scanning.write_repo_cs_list(cs_list)
         # dependabot alerts
         if "dependabot" in features:
-            dependabot_list = dependabot.list_repo_dependabot_alerts(
-                api_endpoint, github_pat, scope_name
-            )
-            dependabot.write_repo_dependabot_list(dependabot_list)
-
+            try:
+                dependabot_list = dependabot.list_repo_dependabot_alerts(
+                    api_endpoint, github_pat, scope_name
+                )
+                dependabot.write_repo_dependabot_list(dependabot_list)
+            except Exception as e:
+                if any(x in str(e).lower() for x in dependabot_disabled_strings):
+                    print("Skipping Dependabot as it is not enabled.")
+                    print(e)
         # secret scanning
         if "secretscanning" in features:
-            secrets_list = secret_scanning.get_repo_secret_scanning_alerts(
-                api_endpoint, github_pat, scope_name
-            )
-            secret_scanning.write_repo_secrets_list(secrets_list)
+            try:
+                secrets_list = secret_scanning.get_repo_secret_scanning_alerts(
+                    api_endpoint, github_pat, scope_name
+                )
+                secret_scanning.write_repo_secrets_list(secrets_list)
+            except Exception as e:
+                if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
+                    print("Skipping Secret Scanning as it is not enabled.")
+                    print(e)
     else:
         exit("invalid report scope")

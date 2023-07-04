@@ -27,10 +27,6 @@ def list_repo_code_scanning_alerts(api_endpoint, github_pat, repo_name):
         "Accept": "application/vnd.github.v3+json",
     }
     response = requests.get(url, headers=headers)
-    if response.status_code == 404:
-        return "need permission to access,{}".format(repo_name)  # don't have permission
-    if response.status_code == 403:
-        return "need to enable GHAS,{}".format(repo_name)  # no GHAS
     if not response.ok:
         raise Exception(
             "API error,{},{},{}".format(repo_name, response.status_code, response.text)
@@ -72,6 +68,7 @@ def write_repo_cs_list(cs_list):
                 "dismissed_reason",
                 "rule_id",
                 "rule_severity",
+                "security_severity_level",
                 "rule_tags",
                 "rule_description",
                 "rule_name",
@@ -101,6 +98,7 @@ def write_repo_cs_list(cs_list):
                     cs["dismissed_reason"],
                     cs["rule"]["id"],
                     cs["rule"]["severity"],
+                    cs["rule"].get("security_severity_level", 'N/A'),
                     cs["rule"]["tags"],
                     cs["rule"]["description"],
                     cs["rule"]["name"],
@@ -177,6 +175,7 @@ def write_org_cs_list(cs_list):
                 "dismissed_reason",
                 "rule_id",
                 "rule_severity",
+                "security_severity_level",
                 "rule_tags",
                 "rule_description",
                 "rule_name",
@@ -213,6 +212,7 @@ def write_org_cs_list(cs_list):
                     cs["dismissed_reason"],
                     cs["rule"]["id"],
                     cs["rule"]["severity"],
+                    cs["rule"].get("security_severity_level", 'N/A'),
                     cs["rule"]["tags"],
                     cs["rule"]["description"],
                     cs["rule"]["name"],
@@ -296,6 +296,7 @@ def write_enterprise_server_cs_list(cs_list):
                         "dismissed_reason",
                         "rule_id",
                         "rule_severity",
+                        "security_severity_level",
                         "rule_tags",
                         "rule_description",
                         "rule_name",
@@ -327,6 +328,7 @@ def write_enterprise_server_cs_list(cs_list):
                             cs["dismissed_reason"],
                             cs["rule"]["id"],
                             cs["rule"]["severity"],
+                            cs["rule"].get("security_severity_level", 'N/A'),
                             cs["rule"]["tags"],
                             cs["rule"]["description"],
                             cs["rule"]["name"],
@@ -417,6 +419,7 @@ def write_enterprise_cloud_cs_list(cs_list):
                 "dismissed_reason",
                 "rule_id",
                 "rule_severity",
+                "security_severity_level",
                 "rule_tags",
                 "rule_description",
                 "rule_name",
@@ -448,6 +451,7 @@ def write_enterprise_cloud_cs_list(cs_list):
                     cs["dismissed_reason"],
                     cs["rule"]["id"],
                     cs["rule"]["severity"],
+                    cs["rule"].get("security_severity_level", 'N/A'),
                     cs["rule"]["tags"],
                     cs["rule"]["description"],
                     cs["rule"]["name"],
