@@ -91,7 +91,7 @@ if __name__ == "__main__":
                     print("Skipping Secret Scanning as it is not enabled.")
                     print(e)
                 else:
-                    raise e
+                    raise
         # code scanning
         if "codescanning" in features:
             version = enterprise.get_enterprise_version(api_endpoint)
@@ -120,7 +120,7 @@ if __name__ == "__main__":
                     print("Skipping Dependabot as it is not enabled.")
                     print(e)
                 else:
-                    raise e
+                    raise
     # organization scope
     elif report_scope == "organization":
         # code scanning
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                     print("Skipping Dependabot as it is not enabled.")
                     print(e)
                 else:
-                    raise e
+                    raise
         # secret scanning
         if "secretscanning" in features:
             try:
@@ -154,7 +154,7 @@ if __name__ == "__main__":
                     print("Skipping Secret Scanning as it is not enabled.")
                     print(e)
                 else:
-                    raise e
+                    raise
     # repository scope
     elif report_scope == "repository":
         # code scanning
@@ -175,7 +175,7 @@ if __name__ == "__main__":
                     print("Skipping Dependabot as it is not enabled.")
                     print(e)
                 else:
-                    raise e
+                    raise
         # secret scanning
         if "secretscanning" in features:
             try:
@@ -188,6 +188,6 @@ if __name__ == "__main__":
                     print("Skipping Secret Scanning as it is not enabled.")
                     print(e)
                 else:
-                    raise e
+                    raise
     else:
         exit("Invalid report scope")
