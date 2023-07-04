@@ -90,6 +90,8 @@ if __name__ == "__main__":
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
                     print("Skipping Secret Scanning as it is not enabled.")
                     print(e)
+                else:
+                    raise e
         # code scanning
         if "codescanning" in features:
             version = enterprise.get_enterprise_version(api_endpoint)
@@ -117,6 +119,8 @@ if __name__ == "__main__":
                 if any(x in str(e).lower() for x in dependabot_disabled_strings):
                     print("Skipping Dependabot as it is not enabled.")
                     print(e)
+                else:
+                    raise e
     # organization scope
     elif report_scope == "organization":
         # code scanning
@@ -136,6 +140,8 @@ if __name__ == "__main__":
                 if any(x in str(e).lower() for x in dependabot_disabled_strings):
                     print("Skipping Dependabot as it is not enabled.")
                     print(e)
+                else:
+                    raise e
         # secret scanning
         if "secretscanning" in features:
             try:
@@ -147,6 +153,8 @@ if __name__ == "__main__":
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
                     print("Skipping Secret Scanning as it is not enabled.")
                     print(e)
+                else:
+                    raise e
     # repository scope
     elif report_scope == "repository":
         # code scanning
@@ -166,6 +174,8 @@ if __name__ == "__main__":
                 if any(x in str(e).lower() for x in dependabot_disabled_strings):
                     print("Skipping Dependabot as it is not enabled.")
                     print(e)
+                else:
+                    raise e
         # secret scanning
         if "secretscanning" in features:
             try:
@@ -177,5 +187,7 @@ if __name__ == "__main__":
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
                     print("Skipping Secret Scanning as it is not enabled.")
                     print(e)
+                else:
+                    raise e
     else:
-        exit("invalid report scope")
+        exit("Invalid report scope")
