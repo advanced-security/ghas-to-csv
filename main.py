@@ -21,8 +21,14 @@ from src import code_scanning, dependabot, enterprise, secret_scanning
 import os
 
 # Possible strings indicating feature is not enabled
-secret_scanning_disabled_strings = ["secret scanning is not enabled", "secret scanning is disabled"]
-dependabot_disabled_strings = ["dependabot alerts are not enabled", "dependabot alerts are disabled"]
+secret_scanning_disabled_strings = [
+    "secret scanning is not enabled",
+    "secret scanning is disabled"
+]
+dependabot_disabled_strings = [
+    "dependabot alerts are not enabled",
+    "dependabot alerts are disabled"
+]
 
 # Define the available features
 FEATURES = ["secretscanning", "codescanning", "dependabot"]
