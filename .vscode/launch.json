@@ -12,20 +12,22 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                //"GITHUB_SERVER_URL": "https://ctcampbell-01797a1ba7830bfdd.ghe-test.net",
-                //"GITHUB_API_URL": "https://ctcampbell-01797a1ba7830bfdd.ghe-test.net/api/v3",
-                "GITHUB_PAT": "${input:gh_pat}",
-                //"GITHUB_REPORT_SCOPE": "enterprise",
-                "SCOPE_NAME": "ctcampbell/webgoat"
+                "SCOPE_NAME": "${input:gh_scope_name}",
+                "GITHUB_PAT": "${input:gh_pat}"
             }
         }
     ],
     "inputs": [
         {
-          "id": "gh_pat",
-          "type": "promptString",
-          "description": "Enter your GitHub PAT",
-          "password": true
+            "id": "gh_pat",
+            "type": "promptString",
+            "description": "Enter your GitHub PAT",
+            "password": true
+        },
+        {
+            "id": "gh_scope_name",
+            "type": "promptString",
+            "description": "Enter your GitHub repo in owner/repo format"
         }
     ]
 }
