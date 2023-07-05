@@ -2,22 +2,7 @@
 
 # Imports
 from defusedcsv import csv
-import requests
-
-
-def make_dependabot_api_call(url, github_pat):
-    headers = {
-        "Authorization": "token {}".format(github_pat),
-        "Accept": "application/vnd.github+json",
-    }
-    response = requests.get(url, headers=headers)
-    if not response.ok:
-        raise Exception(response.status_code, response.text)
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(response.links["next"]["url"], headers=headers)
-        response_json.extend(response.json())
-    return response_json
+from . import api_helpers
 
 
 def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
@@ -33,7 +18,7 @@ def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
     - List of _all_ dependency alerts on the repository
     """
     url = f"{api_endpoint}/repos/{repo_name}/dependabot/alerts?per_page=100&page=1"
-    dependabot_alerts = make_dependabot_api_call(url, github_pat)
+    dependabot_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(dependabot_alerts)} dependabot alerts in {repo_name}")
     return dependabot_alerts
 
@@ -106,7 +91,7 @@ def list_org_dependabot_alerts(api_endpoint, github_pat, org_name):
     - List of _all_ dependency alerts on the organization
     """
     url = f"{api_endpoint}/orgs/{org_name}/dependabot/alerts?per_page=100&page=1"
-    dependabot_alerts = make_dependabot_api_call(url, github_pat)
+    dependabot_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(dependabot_alerts)} dependabot alerts in {org_name}")
     return dependabot_alerts
 
@@ -125,7 +110,7 @@ def list_enterprise_dependabot_alerts(api_endpoint, github_pat, enterprise_slug)
     - List of _all_ dependency alerts on the enterprise
     """
     url = f"{api_endpoint}/enterprises/{enterprise_slug}/dependabot/alerts?per_page=100&page=1"
-    dependabot_alerts = make_dependabot_api_call(url, github_pat)
+    dependabot_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(dependabot_alerts)} dependabot alerts in {enterprise_slug}")
     return dependabot_alerts
 

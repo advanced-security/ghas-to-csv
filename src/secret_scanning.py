@@ -2,22 +2,7 @@
 
 # Imports
 from defusedcsv import csv
-import requests
-
-
-def make_ss_api_call(url, github_pat):
-    headers = {
-        "Authorization": f"token {github_pat}",
-        "Accept": "application/vnd.github.v3+json",
-    }
-    response = requests.get(url, headers=headers)
-    if not response.ok:
-        raise Exception(response.status_code, response.text)
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(response.links["next"]["url"], headers=headers)
-        response_json.extend(response.json())
-    return response_json
+from . import api_helpers
 
 
 def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
@@ -33,7 +18,7 @@ def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
     - List of _all_ secret scanning alerts on the repository
     """
     url = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1"
-    ss_alerts = make_ss_api_call(url, github_pat)
+    ss_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(ss_alerts)} secret scanning alerts in {repo_name}")
     return ss_alerts
 
@@ -100,7 +85,7 @@ def get_org_ss_alerts(api_endpoint, github_pat, org_name):
     - List of _all_ secret scanning alerts on the organization
     """
     url = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&page=1"
-    ss_alerts = make_ss_api_call(url, github_pat)
+    ss_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(ss_alerts)} secret scanning alerts in {org_name}")
     return ss_alerts
 
@@ -182,7 +167,7 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
     - List of _all_ secret scanning alerts on the enterprise
     """
     url = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&page=1"
-    ss_alerts = make_ss_api_call(url, github_pat)
+    ss_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(ss_alerts)} secret scanning alerts in {enterprise_slug}")
     return ss_alerts
 

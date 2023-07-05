@@ -2,22 +2,7 @@
 
 # Imports
 from defusedcsv import csv
-import requests
-
-
-def make_cs_api_call(url, github_pat):
-    headers = {
-        "Authorization": "token {}".format(github_pat),
-        "Accept": "application/vnd.github.v3+json",
-    }
-    response = requests.get(url, headers=headers)
-    if not response.ok:
-        raise Exception(response.status_code, response.text)
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(response.links["next"]["url"], headers=headers)
-        response_json.extend(response.json())
-    return response_json
+from . import api_helpers
 
 
 def list_repo_cs_alerts(api_endpoint, github_pat, repo_name):
@@ -33,7 +18,7 @@ def list_repo_cs_alerts(api_endpoint, github_pat, repo_name):
     - List of _all_ code scanning alerts on the repository
     """
     url = f"{api_endpoint}/repos/{repo_name}/code-scanning/alerts?per_page=100&page=1"
-    code_scanning_alerts = make_cs_api_call(url, github_pat)
+    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(code_scanning_alerts)} code scanning alerts in {repo_name}")
     return code_scanning_alerts
 
@@ -116,7 +101,7 @@ def list_org_cs_alerts(api_endpoint, github_pat, org_name):
     """
 
     url = f"{api_endpoint}/orgs/{org_name}/code-scanning/alerts?per_page=100&page=1"
-    code_scanning_alerts = make_cs_api_call(url, github_pat)
+    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(code_scanning_alerts)} code scanning alerts in {org_name}")
     return code_scanning_alerts
 
@@ -318,7 +303,7 @@ def list_enterprise_cloud_cs_alerts(api_endpoint, github_pat, enterprise_slug):
     """
 
     url = f"{api_endpoint}/enterprises/{enterprise_slug}/code-scanning/alerts?per_page=100&page=1"
-    code_scanning_alerts = make_cs_api_call(url, github_pat)
+    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(code_scanning_alerts)} code scanning alerts in {enterprise_slug}")
     return code_scanning_alerts
 
