@@ -1,13 +1,28 @@
-# This holds all the things that do stuff for code scanning API
+# This holds all the things that do stuff for dependabot API
 
 # Imports
 from defusedcsv import csv
 import requests
 
 
+def make_dependabot_api_call(url, github_pat):
+    headers = {
+        "Authorization": "token {}".format(github_pat),
+        "Accept": "application/vnd.github+json",
+    }
+    response = requests.get(url, headers=headers)
+    if not response.ok:
+        raise Exception(response.status_code, response.text)
+    response_json = response.json()
+    while "next" in response.links.keys():
+        response = requests.get(response.links["next"]["url"], headers=headers)
+        response_json.extend(response.json())
+    return response_json
+
+
 def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
     """
-    Get all the code scanning alerts on a given repository.
+    Get all the dependabot alerts on a given repository.
 
     Inputs:
     - API endpoint (for GHES/GHAE compatibility)
@@ -17,34 +32,10 @@ def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
     Outputs:
     - List of _all_ dependency alerts on the repository
     """
-
-    # Get code scanning alerts
-    url = "{}/repos/{}/dependabot/alerts?per_page=100&page=1".format(
-        api_endpoint, repo_name
-    )
-    response = requests.get(
-        url,
-        headers={
-            "Authorization": "token {}".format(github_pat),
-            "Accept": "application/vnd.github+json",
-        },
-    )
-    if not response.ok:
-        raise Exception(
-            "API error,{},{},{}".format(repo_name, response.status_code, response.text)
-        )
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(
-            response.links["next"]["url"],
-            headers={"Authorization": "token {}".format(github_pat)},
-        )
-        response_json.extend(response.json())
-
-    print("Found {} dependabot alerts in {}".format(len(response_json), repo_name))
-
-    # Return code scanning alerts
-    return response_json
+    url = f"{api_endpoint}/repos/{repo_name}/dependabot/alerts?per_page=100&page=1"
+    dependabot_alerts = make_dependabot_api_call(url, github_pat)
+    print(f"Found {len(dependabot_alerts)} dependabot alerts in {repo_name}")
+    return dependabot_alerts
 
 
 def write_repo_dependabot_list(dependabot_list):
@@ -80,17 +71,6 @@ def write_repo_dependabot_list(dependabot_list):
             ]
         )
         for alert in dependabot_list:
-            if alert["state"] == "open":
-                alert["fixed_at"] = "none"
-                alert["dismissed_by"] = "none"
-                alert["dismissed_at"] = "none"
-                alert["dismissed_reason"] = "none"
-            if alert["state"] == "dismissed":
-                alert["fixed_at"] = "none"
-            if alert["state"] == "fixed":
-                alert["dismissed_by"] = "none"
-                alert["dismissed_at"] = "none"
-                alert["dismissed_reason"] = "none"
             writer.writerow(
                 [
                     alert["number"],
@@ -125,34 +105,10 @@ def list_org_dependabot_alerts(api_endpoint, github_pat, org_name):
     Outputs:
     - List of _all_ dependency alerts on the organization
     """
-
-    # Get dependabot alerts
-    url = "{}/orgs/{}/dependabot/alerts?per_page=100&page=1".format(
-        api_endpoint, org_name
-    )
-    response = requests.get(
-        url,
-        headers={
-            "Authorization": "token {}".format(github_pat),
-            "Accept": "application/vnd.github+json",
-        },
-    )
-    if not response.ok:
-        raise Exception(
-            "API error,{},{},{}".format(org_name, response.status_code, response.text)
-        )
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(
-            response.links["next"]["url"],
-            headers={"Authorization": "token {}".format(github_pat)},
-        )
-        response_json.extend(response.json())
-
-    print("Found {} dependabot alerts in {}".format(len(response_json), org_name))
-
-    # Return dependabot alerts
-    return response_json
+    url = f"{api_endpoint}/orgs/{org_name}/dependabot/alerts?per_page=100&page=1"
+    dependabot_alerts = make_dependabot_api_call(url, github_pat)
+    print(f"Found {len(dependabot_alerts)} dependabot alerts in {org_name}")
+    return dependabot_alerts
 
 
 def list_enterprise_dependabot_alerts(api_endpoint, github_pat, enterprise_slug):
@@ -168,38 +124,10 @@ def list_enterprise_dependabot_alerts(api_endpoint, github_pat, enterprise_slug)
     Outputs:
     - List of _all_ dependency alerts on the enterprise
     """
-
-    # Get dependabot alerts
-    url = "{}/enterprises/{}/dependabot/alerts?per_page=100&page=1".format(
-        api_endpoint, enterprise_slug
-    )
-    response = requests.get(
-        url,
-        headers={
-            "Authorization": "token {}".format(github_pat),
-            "Accept": "application/vnd.github+json",
-        },
-    )
-    if not response.ok:
-        raise Exception(
-            "API error,{},{},{}".format(
-                enterprise_slug, response.status_code, response.text
-            )
-        )
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(
-            response.links["next"]["url"],
-            headers={"Authorization": "token {}".format(github_pat)},
-        )
-        response_json.extend(response.json())
-
-    print(
-        "Found {} dependabot alerts in {}".format(len(response_json), enterprise_slug)
-    )
-
-    # Return dependabot alerts
-    return response_json
+    url = f"{api_endpoint}/enterprises/{enterprise_slug}/dependabot/alerts?per_page=100&page=1"
+    dependabot_alerts = make_dependabot_api_call(url, github_pat)
+    print(f"Found {len(dependabot_alerts)} dependabot alerts in {enterprise_slug}")
+    return dependabot_alerts
 
 
 def write_org_or_enterprise_dependabot_list(dependabot_list):
@@ -242,17 +170,6 @@ def write_org_or_enterprise_dependabot_list(dependabot_list):
             ]
         )
         for alert in dependabot_list:
-            if alert["state"] == "open":
-                alert["fixed_at"] = "none"
-                alert["dismissed_by"] = "none"
-                alert["dismissed_at"] = "none"
-                alert["dismissed_reason"] = "none"
-            if alert["state"] == "dismissed":
-                alert["fixed_at"] = "none"
-            if alert["state"] == "fixed":
-                alert["dismissed_by"] = "none"
-                alert["dismissed_at"] = "none"
-                alert["dismissed_reason"] = "none"
             writer.writerow(
                 [
                     alert["number"],

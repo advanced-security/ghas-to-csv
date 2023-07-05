@@ -11,7 +11,8 @@
                 "--env-file", ".github/linters/super-linter.env",
                 "-v", "${workspaceFolder}:/tmp/lint",
                 "github/super-linter:slim-v5"
-            ]
+            ],
+            "problemMatcher": []
         }
     ]
 }
