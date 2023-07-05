@@ -16,18 +16,11 @@ def get_enterprise_version(api_endpoint):
     GHES returns the version of GHES that's installed (e.g. "3.4.0")
     """
     if api_endpoint != "https://api.github.com":
-        url = "{}/meta".format(api_endpoint)
+        url = f"{api_endpoint}/meta"
         response = requests.get(url)
         if not response.ok:
-            raise Exception(
-                "API error,{},{},{}".format(
-                    api_endpoint, response.status_code, response.text
-                )
-            )
-        if "installed_version" in response.json():
-            return response.json()["installed_version"]
-        else:
-            return "unknown version of GitHub"
+            raise Exception(response.status_code, response.text)
+        return response.json().get("installed_version", "GitHub version not found in response")
     else:
         return "GHEC"
 
@@ -38,14 +31,12 @@ def get_repo_report(url, github_pat):
     """
     headers = {
         "Accept": "application/vnd.github.v3+json",
-        "Authorization": "token {}".format(github_pat),
+        "Authorization": f"token {github_pat}",
     }
-    url = "{}/stafftools/reports/all_repositories.csv".format(url)
+    url = f"{url}/stafftools/reports/all_repositories.csv"
     response = requests.get(url, headers=headers)
     if not response.ok:
-        raise Exception(
-            "API error,{},{},{}".format(url, response.status_code, response.text)
-        )
+        raise Exception(response.status_code, response.text)
     if response.status_code == 202:  # report needs to be generated
         while response.status_code == 202:
             print("Waiting a minute for the report to be generated ...")
@@ -55,8 +46,8 @@ def get_repo_report(url, github_pat):
         print("Report is ready!  Reading it now ...")
         for row in csv.reader(response.text.splitlines()):  # skip user repos
             if row[2] == "Organization":
-                yield "{}/{}".format(row[3], row[5])
+                yield f"{row[3]}/{row[5]}"
             else:
                 pass
     else:  # something went wrong with fetching the report
-        exit("Error: {}".format(response.status_code))
+        exit(f"Error: {response.status_code} {response.text}")

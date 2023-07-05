@@ -2,10 +2,10 @@
 
 # Imports
 from defusedcsv import csv
-import requests
+from . import api_helpers
 
 
-def list_repo_code_scanning_alerts(api_endpoint, github_pat, repo_name):
+def list_repo_cs_alerts(api_endpoint, github_pat, repo_name):
     """
     Get a list of all code scanning alerts on a given repository.
 
@@ -17,33 +17,10 @@ def list_repo_code_scanning_alerts(api_endpoint, github_pat, repo_name):
     Outputs:
     - List of _all_ code scanning alerts on the repository
     """
-
-    # Get code scanning alerts
-    url = "{}/repos/{}/code-scanning/alerts?per_page=100&page=1".format(
-        api_endpoint, repo_name
-    )
-    headers = {
-        "Authorization": "token {}".format(github_pat),
-        "Accept": "application/vnd.github.v3+json",
-    }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 404:
-        return "need permission to access,{}".format(repo_name)  # don't have permission
-    if response.status_code == 403:
-        return "need to enable GHAS,{}".format(repo_name)  # no GHAS
-    if not response.ok:
-        raise Exception(
-            "API error,{},{},{}".format(repo_name, response.status_code, response.text)
-        )
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(response.links["next"]["url"], headers=headers)
-        response_json.extend(response.json())
-
-    print("Found {} code scanning alerts in {}".format(len(response_json), repo_name))
-
-    # Return code scanning alerts
-    return response_json
+    url = f"{api_endpoint}/repos/{repo_name}/code-scanning/alerts?per_page=100&page=1"
+    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
+    print(f"Found {len(code_scanning_alerts)} code scanning alerts in {repo_name}")
+    return code_scanning_alerts
 
 
 def write_repo_cs_list(cs_list):
@@ -57,7 +34,6 @@ def write_repo_cs_list(cs_list):
     - CSV file of code scanning alerts
     """
 
-    # Write code scanning alerts to csv file
     with open("cs_list.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerow(
@@ -72,6 +48,7 @@ def write_repo_cs_list(cs_list):
                 "dismissed_reason",
                 "rule_id",
                 "rule_severity",
+                "security_severity_level",
                 "rule_tags",
                 "rule_description",
                 "rule_name",
@@ -84,11 +61,6 @@ def write_repo_cs_list(cs_list):
             ]
         )
         for cs in cs_list:
-            if cs["state"] == "open":
-                cs["fixed_at"] = "none"
-                cs["dismissed_by"] = "none"
-                cs["dismissed_at"] = "none"
-                cs["dismissed_reason"] = "none"
             writer.writerow(
                 [
                     cs["number"],
@@ -96,11 +68,12 @@ def write_repo_cs_list(cs_list):
                     cs["html_url"],
                     cs["state"],
                     cs["fixed_at"],
-                    cs["dismissed_by"],
                     cs["dismissed_at"],
+                    cs["dismissed_by"],
                     cs["dismissed_reason"],
                     cs["rule"]["id"],
                     cs["rule"]["severity"],
+                    cs["rule"].get("security_severity_level", ""),
                     cs["rule"]["tags"],
                     cs["rule"]["description"],
                     cs["rule"]["name"],
@@ -114,7 +87,7 @@ def write_repo_cs_list(cs_list):
             )
 
 
-def list_org_code_scanning_alerts(api_endpoint, github_pat, org_name):
+def list_org_cs_alerts(api_endpoint, github_pat, org_name):
     """
     Get a list of all code scanning alerts on a given organization.
 
@@ -127,28 +100,10 @@ def list_org_code_scanning_alerts(api_endpoint, github_pat, org_name):
     - List of _all_ code scanning alerts on the organization
     """
 
-    # Get code scanning alerts
-    url = "{}/orgs/{}/code-scanning/alerts?per_page=100&page=1".format(
-        api_endpoint, org_name
-    )
-    headers = {
-        "Authorization": "token {}".format(github_pat),
-        "Accept": "application/vnd.github.v3+json",
-    }
-    response = requests.get(url, headers=headers)
-    if not response.ok:
-        raise Exception(
-            "API error,{},{},{}".format(org_name, response.status_code, response.text)
-        )
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(response.links["next"]["url"], headers=headers)
-        response_json.extend(response.json())
-
-    print("Found {} code scanning alerts in {}".format(len(response_json), org_name))
-
-    # Return code scanning alerts
-    return response_json
+    url = f"{api_endpoint}/orgs/{org_name}/code-scanning/alerts?per_page=100&page=1"
+    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
+    print(f"Found {len(code_scanning_alerts)} code scanning alerts in {org_name}")
+    return code_scanning_alerts
 
 
 def write_org_cs_list(cs_list):
@@ -177,6 +132,7 @@ def write_org_cs_list(cs_list):
                 "dismissed_reason",
                 "rule_id",
                 "rule_severity",
+                "security_severity_level",
                 "rule_tags",
                 "rule_description",
                 "rule_name",
@@ -196,23 +152,19 @@ def write_org_cs_list(cs_list):
             ]
         )
         for cs in cs_list:
-            if cs["state"] == "open":
-                cs["fixed_at"] = "none"
-                cs["dismissed_by"] = "none"
-                cs["dismissed_at"] = "none"
-                cs["dismissed_reason"] = "none"
             writer.writerow(
                 [
                     cs["number"],
                     cs["created_at"],
                     cs["html_url"],
                     cs["state"],
-                    cs["fixed_at"],
-                    cs["dismissed_by"],
-                    cs["dismissed_at"],
-                    cs["dismissed_reason"],
+                    cs.get("fixed_at", ""),
+                    cs.get("dismissed_by", ""),
+                    cs.get("dismissed_at", ""),
+                    cs.get("dismissed_reason", ""),
                     cs["rule"]["id"],
                     cs["rule"]["severity"],
+                    cs["rule"].get("security_severity_level", ""),
                     cs["rule"]["tags"],
                     cs["rule"]["description"],
                     cs["rule"]["name"],
@@ -233,7 +185,7 @@ def write_org_cs_list(cs_list):
             )
 
 
-def list_enterprise_server_code_scanning_alerts(api_endpoint, github_pat, repo_list):
+def list_enterprise_server_cs_alerts(api_endpoint, github_pat, repo_list):
     """
     Get a list of all code scanning alerts on a given enterprise.
 
@@ -254,9 +206,7 @@ def list_enterprise_server_code_scanning_alerts(api_endpoint, github_pat, repo_l
     while True:
         try:
             repo_name = next(repo_list)  # skip the header by putting this up front
-            alerts.append(
-                list_repo_code_scanning_alerts(api_endpoint, github_pat, repo_name)
-            )
+            alerts.append(list_repo_cs_alerts(api_endpoint, github_pat, repo_name))
         except StopIteration:
             break
         except Exception as e:
@@ -279,7 +229,6 @@ def write_enterprise_server_cs_list(cs_list):
 
     for alert_list in cs_list:
         if type(alert_list) == list:
-            print(alert_list)
             with open("cs_list.csv", "a") as f:
                 writer = csv.writer(f)
                 writer.writerow(
@@ -296,6 +245,7 @@ def write_enterprise_server_cs_list(cs_list):
                         "dismissed_reason",
                         "rule_id",
                         "rule_severity",
+                        "security_severity_level",
                         "rule_tags",
                         "rule_description",
                         "rule_name",
@@ -308,11 +258,6 @@ def write_enterprise_server_cs_list(cs_list):
                     ]
                 )
                 for cs in alert_list:  # loop through each alert in the list
-                    if cs["state"] == "open":
-                        cs["fixed_at"] = "none"
-                        cs["dismissed_by"] = "none"
-                        cs["dismissed_at"] = "none"
-                        cs["dismissed_reason"] = "none"
                     writer.writerow(
                         [
                             cs["repository"]["full_name"],
@@ -321,12 +266,13 @@ def write_enterprise_server_cs_list(cs_list):
                             cs["created_at"],
                             cs["html_url"],
                             cs["state"],
-                            cs["fixed_at"],
-                            cs["dismissed_by"],
-                            cs["dismissed_at"],
-                            cs["dismissed_reason"],
+                            cs.get("fixed_at", ""),
+                            cs.get("dismissed_by", ""),
+                            cs.get("dismissed_at", ""),
+                            cs.get("dismissed_reason", ""),
                             cs["rule"]["id"],
                             cs["rule"]["severity"],
+                            cs["rule"].get("security_severity_level", "N/A"),
                             cs["rule"]["tags"],
                             cs["rule"]["description"],
                             cs["rule"]["name"],
@@ -344,9 +290,7 @@ def write_enterprise_server_cs_list(cs_list):
                 writer.writerow([alert_list])
 
 
-def list_enterprise_cloud_code_scanning_alerts(
-    api_endpoint, github_pat, enterprise_slug
-):
+def list_enterprise_cloud_cs_alerts(api_endpoint, github_pat, enterprise_slug):
     """
     Get a list of all code scanning alerts on a given enterprise.
 
@@ -358,34 +302,10 @@ def list_enterprise_cloud_code_scanning_alerts(
     - List of _all_ code scanning alerts in enterprise that PAT user can access
     """
 
-    # Get code scanning alerts
-    url = "{}/enterprises/{}/code-scanning/alerts?per_page=100&page=1".format(
-        api_endpoint, enterprise_slug
-    )
-    headers = {
-        "Authorization": "token {}".format(github_pat),
-        "Accept": "application/vnd.github.v3+json",
-    }
-    response = requests.get(url, headers=headers)
-    if not response.ok:
-        raise Exception(
-            "API error,{},{},{}".format(
-                enterprise_slug, response.status_code, response.text
-            )
-        )
-    response_json = response.json()
-    while "next" in response.links.keys():
-        response = requests.get(response.links["next"]["url"], headers=headers)
-        response_json.extend(response.json())
-
-    print(
-        "Found {} code scanning alerts in {}".format(
-            len(response_json), enterprise_slug
-        )
-    )
-
-    # Return code scanning alerts
-    return response_json
+    url = f"{api_endpoint}/enterprises/{enterprise_slug}/code-scanning/alerts?per_page=100&page=1"
+    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
+    print(f"Found {len(code_scanning_alerts)} code scanning alerts in {enterprise_slug}")
+    return code_scanning_alerts
 
 
 def write_enterprise_cloud_cs_list(cs_list):
@@ -417,6 +337,7 @@ def write_enterprise_cloud_cs_list(cs_list):
                 "dismissed_reason",
                 "rule_id",
                 "rule_severity",
+                "security_severity_level",
                 "rule_tags",
                 "rule_description",
                 "rule_name",
@@ -429,11 +350,6 @@ def write_enterprise_cloud_cs_list(cs_list):
             ]
         )
         for cs in cs_list:  # loop through each alert in the list
-            if cs["state"] == "open":
-                cs["fixed_at"] = "none"
-                cs["dismissed_by"] = "none"
-                cs["dismissed_at"] = "none"
-                cs["dismissed_reason"] = "none"
             writer.writerow(
                 [
                     cs["repository"]["full_name"],
@@ -442,12 +358,13 @@ def write_enterprise_cloud_cs_list(cs_list):
                     cs["created_at"],
                     cs["html_url"],
                     cs["state"],
-                    cs["fixed_at"],
-                    cs["dismissed_by"],
-                    cs["dismissed_at"],
-                    cs["dismissed_reason"],
+                    cs.get("fixed_at", ""),
+                    cs.get("dismissed_by", ""),
+                    cs.get("dismissed_at", ""),
+                    cs.get("dismissed_reason", ""),
                     cs["rule"]["id"],
                     cs["rule"]["severity"],
+                    cs["rule"].get("security_severity_level", "N/A"),
                     cs["rule"]["tags"],
                     cs["rule"]["description"],
                     cs["rule"]["name"],
