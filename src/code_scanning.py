@@ -3,6 +3,7 @@
 # Imports
 from defusedcsv import csv
 from . import api_helpers
+import requests
 
 
 def list_repo_cs_alerts(api_endpoint, github_pat, repo_name):
@@ -17,10 +18,32 @@ def list_repo_cs_alerts(api_endpoint, github_pat, repo_name):
     Outputs:
     - List of _all_ code scanning alerts on the repository
     """
-    url = f"{api_endpoint}/repos/{repo_name}/code-scanning/alerts?per_page=100&page=1"
-    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
-    print(f"Found {len(code_scanning_alerts)} code scanning alerts in {repo_name}")
-    return code_scanning_alerts
+     # Get code scanning alerts
+    url = "{}/repos/{}/code-scanning/alerts?per_page=100&page=1".format(
+         api_endpoint, repo_name
+     )
+    headers = {
+         "Authorization": "token {}".format(github_pat),
+         "Accept": "application/vnd.github.v3+json",
+     }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 403:
+         return "need to enable GHAS,{}".format(repo_name)  # no GHAS
+    if response.status_code == 404:
+         return "need permission to access,{}".format(repo_name)  # don't have permission
+    if not response.ok:
+         raise Exception(
+             "API error,{},{},{}".format(repo_name, response.status_code, response.text)
+         )
+    response_json = response.json()
+    while "next" in response.links.keys():
+        response = requests.get(response.links["next"]["url"], headers=headers)
+        response_json.extend(response.json())
+
+    print("Found {} code scanning alerts in {}".format(len(response_json), repo_name))
+
+    # Return code scanning alerts
+    return response_json
 
 
 def write_repo_cs_list(cs_list):
@@ -99,11 +122,29 @@ def list_org_cs_alerts(api_endpoint, github_pat, org_name):
     Outputs:
     - List of _all_ code scanning alerts on the organization
     """
+    # Get code scanning alerts
+    url = "{}/orgs/{}/code-scanning/alerts?per_page=100&page=1".format(
+        api_endpoint, org_name
+    )
+    headers = {
+        "Authorization": "token {}".format(github_pat),
+        "Accept": "application/vnd.github.v3+json",
+    }
+    response = requests.get(url, headers=headers)
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(org_name, response.status_code, response.text)
+        )
+    response_json = response.json()
+    while "next" in response.links.keys():
+        response = requests.get(response.links["next"]["url"], headers=headers)
+        response_json.extend(response.json())
 
-    url = f"{api_endpoint}/orgs/{org_name}/code-scanning/alerts?per_page=100&page=1"
-    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
-    print(f"Found {len(code_scanning_alerts)} code scanning alerts in {org_name}")
-    return code_scanning_alerts
+    print("Found {} code scanning alerts in {}".format(len(response_json), org_name))
+
+    # Return code scanning alerts
+    return response_json
+    
 
 
 def write_org_cs_list(cs_list):
@@ -302,10 +343,34 @@ def list_enterprise_cloud_cs_alerts(api_endpoint, github_pat, enterprise_slug):
     - List of _all_ code scanning alerts in enterprise that PAT user can access
     """
 
-    url = f"{api_endpoint}/enterprises/{enterprise_slug}/code-scanning/alerts?per_page=100&page=1"
-    code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
-    print(f"Found {len(code_scanning_alerts)} code scanning alerts in {enterprise_slug}")
-    return code_scanning_alerts
+    # Get code scanning alerts
+    url = "{}/enterprises/{}/code-scanning/alerts?per_page=100&page=1".format(
+        api_endpoint, enterprise_slug
+    )
+    headers = {
+        "Authorization": "token {}".format(github_pat),
+        "Accept": "application/vnd.github.v3+json",
+    }
+    response = requests.get(url, headers=headers)
+    if not response.ok:
+        raise Exception(
+            "API error,{},{},{}".format(
+                enterprise_slug, response.status_code, response.text
+            )
+        )
+    response_json = response.json()
+    while "next" in response.links.keys():
+        response = requests.get(response.links["next"]["url"], headers=headers)
+        response_json.extend(response.json())
+
+    print(
+        "Found {} code scanning alerts in {}".format(
+            len(response_json), enterprise_slug
+        )
+    )
+
+    # Return code scanning alerts
+    return response_json
 
 
 def write_enterprise_cloud_cs_list(cs_list):
