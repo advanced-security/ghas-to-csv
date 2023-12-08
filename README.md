@@ -36,7 +36,7 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
 
 ```yaml
       - name: CSV export
-        uses: advanced-security/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v3
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # you need to set a PAT
       - name: Upload CSV
@@ -51,7 +51,7 @@ To run this targeting an organization, here's an example:
 
 ```yaml
       - name: CSV export
-        uses: advanced-security/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v3
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
           GITHUB_REPORT_SCOPE: "organization"
@@ -62,7 +62,7 @@ Or for an enterprise:
 
 ```yaml
       - name: CSV export
-        uses: advanced-security/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v3
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
           GITHUB_REPORT_SCOPE: "enterprise"
@@ -82,7 +82,7 @@ The first two are only needed if you're running this in a GitHub Enterprise Serv
 
 ```yaml
       - name: CSV export
-        uses: advanced-security/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v3
         env:
           GITHUB_PAT: ${{ secrets.PAT }}
           GITHUB_API_URL: "https://github.example.com/api/v3"
@@ -122,7 +122,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: CSV export
-        uses: advanced-security/ghas-to-csv@v2
+        uses: advanced-security/ghas-to-csv@v3
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository
