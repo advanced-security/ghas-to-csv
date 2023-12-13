@@ -136,3 +136,6 @@ swap.md
 
 # Ignore macos files
 .DS_Store
+
+# Token file used in testing locally
+token.txt
