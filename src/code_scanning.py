@@ -58,8 +58,8 @@ def write_repo_cs_list(cs_list):
                 "most_recent_instance_state",
                 "most_recent_instance_sha",
                 "instances_url",
-                "category",
-                "location_path"
+                "most_recent_instance_category",
+                "most_recent_instance_location_path"
             ]
         )
         for cs in cs_list:
