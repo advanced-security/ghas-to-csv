@@ -40,7 +40,7 @@ An example of use is below.  Note that the custom inputs, such as if you are wan
         env:
           GITHUB_PAT: ${{ secrets.PAT }}  # you need to set a PAT
       - name: Upload CSV
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ghas-data
           path: ${{ github.workspace }}/*.csv
@@ -127,7 +127,7 @@ jobs:
           GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository
       - name: Upload CSV
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ghas-data
           path: ${{ github.workspace }}/*.csv
@@ -139,7 +139,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v3
       - name: Download CSVs
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ghas-data
       - name: Tiny http server moment  # Flat can only use HTTP or SQL, so ... yeah.
