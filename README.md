@@ -73,7 +73,7 @@ The list of all available options that can be set as environmental variables is 
 
 - `GITHUB_API_URL`: The URL of the GitHub API. Default value: `https://api.github.com`.
 - `GITHUB_SERVER_URL`: The URL of the GitHub server. Default value: `https://github.com`.
-- `GITHUB_PAT` or `GITHUB_TOKEN`: The personal access token (PAT) or token for authenticating with the GitHub API. If `GITHUB_PAT` is not set, the value of `GITHUB_TOKEN` is used if it is set. If neither is set, an error occurs.
+- `GITHUB_PAT`: The personal access token (PAT).
 - `GITHUB_REPORT_SCOPE`: The scope of the report to generate. Valid values are `repository` (default), `organization`  or `enterprise`.
 - `SCOPE_NAME` or `GITHUB_REPOSITORY`: The name of the repository, organization or enterprise to generate the report for. If `SCOPE_NAME` is not set, the value of `GITHUB_REPOSITORY` is used if it is set. If neither is set, an error occurs.
 - `FEATURES`: A comma-separated list of features to include in the report. Valid values are `codescanning`, `secretscanning`, `dependabot` or simply `all`. Default value: `all`.
@@ -124,7 +124,7 @@ jobs:
       - name: CSV export
         uses: advanced-security/ghas-to-csv@v3
         env:
-          GITHUB_PAT: ${{ secrets.PAT }}  # needed if not running against the current repository
+          GITHUB_PAT: ${{ secrets.PAT }}
           SCOPE_NAME: "OWNER-NAME/REPO-NAME"  # repository name, needed only if not running against the current repository
       - name: Upload CSV
         uses: actions/upload-artifact@v4
