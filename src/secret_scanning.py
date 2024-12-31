@@ -33,9 +33,6 @@ def write_repo_ss_list(secrets_list):
     Outputs:
     - CSV file of secret scanning alerts
     """
-    if len(secrets_list) == 0:
-        print("No secret scanning alerts found")
-        return
     # Write secret scanning alerts to csv file
     with open("secrets_list.csv", "w") as f:
         writer = csv.writer(f)
@@ -100,9 +97,6 @@ def write_org_ss_list(secrets_list):
     Outputs:
     - CSV file of secret scanning alerts
     """
-    if len(secrets_list) == 0:
-        print("No secret scanning alerts found")
-        return
     # Write secret scanning alerts to csv file
     with open("secrets_list.csv", "w") as f:
         writer = csv.writer(f)
@@ -182,9 +176,6 @@ def write_enterprise_ss_list(secrets_list):
     Outputs:
     - CSV file of secret scanning alerts
     """
-    if len(secrets_list) == 0:
-        print("No secret scanning alerts found")
-        return
     # Write secret scanning alerts to csv file
     with open("secrets_list.csv", "w") as f:
         writer = csv.writer(f)
