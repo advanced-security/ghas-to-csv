@@ -59,7 +59,7 @@ def write_repo_cs_list(cs_list):
                 "most_recent_instance_sha",
                 "instances_url",
                 "most_recent_instance_category",
-                "most_recent_instance_location_path"
+                "most_recent_instance_location_path",
             ]
         )
         for cs in cs_list:
@@ -86,7 +86,7 @@ def write_repo_cs_list(cs_list):
                     cs["most_recent_instance"]["commit_sha"],
                     cs["instances_url"],
                     cs["most_recent_instance"]["category"],
-                    cs["most_recent_instance"]["location"]["path"]
+                    cs["most_recent_instance"]["location"]["path"],
                 ]
             )
 
