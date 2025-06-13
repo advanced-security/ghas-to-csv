@@ -13,7 +13,7 @@ Inputs:
 Outputs:
 - CSV file of secret scanning alerts
 - CSV file of code scanning alerts
-- CSV file of Dependabot alerts 
+- CSV file of Dependabot alerts
 """
 
 # Import modules
