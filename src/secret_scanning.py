@@ -5,7 +5,7 @@ from defusedcsv import csv
 from . import api_helpers
 
 
-def get_repo_ss_alerts(api_endpoint, github_pat, repo_name, secret_type_filter=None):
+def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
     """
     Get all the secret scanning alerts on a given repository.
 
@@ -13,17 +13,43 @@ def get_repo_ss_alerts(api_endpoint, github_pat, repo_name, secret_type_filter=N
     - API endpoint (for GHES/GHAE compatibility)
     - PAT of appropriate scope
     - Repository name
-    - Secret type filter (optional comma-separated list of secret types)
 
     Outputs:
-    - List of _all_ secret scanning alerts on the repository
+    - List of _all_ secret scanning alerts on the repository (both default and generic secret types)
     """
-    url = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1"
-    if secret_type_filter:
-        url += f"&secret_type={secret_type_filter}"
-    ss_alerts = api_helpers.make_api_call(url, github_pat)
-    print(f"Found {len(ss_alerts)} secret scanning alerts in {repo_name}")
-    return ss_alerts
+    # First call: get default secret types (without any filters)
+    url_default = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1"
+    ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
+    
+    # Second call: get generic secret types with hardcoded list
+    generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
+    url_generic = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1&secret_type={generic_secret_types}"
+    ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
+    
+    # Combine results and deduplicate
+    combined_alerts = []
+    alert_numbers_seen = set()
+    duplicates_found = False
+    
+    # Add default alerts
+    for alert in ss_alerts_default:
+        alert_numbers_seen.add(alert["number"])
+        combined_alerts.append(alert)
+    
+    # Add generic alerts, checking for duplicates
+    for alert in ss_alerts_generic:
+        if alert["number"] in alert_numbers_seen:
+            duplicates_found = True
+        else:
+            alert_numbers_seen.add(alert["number"])
+            combined_alerts.append(alert)
+    
+    # Warn if duplicates were found
+    if duplicates_found:
+        print(f"::warning::Duplicate secret scanning alerts detected in {repo_name}. Please report this behavior via an issue to the repository owners as the API behavior may have changed.")
+    
+    print(f"Found {len(combined_alerts)} secret scanning alerts in {repo_name} ({len(ss_alerts_default)} default, {len(ss_alerts_generic)} generic)")
+    return combined_alerts
 
 
 def write_repo_ss_list(secrets_list):
@@ -72,7 +98,7 @@ def write_repo_ss_list(secrets_list):
             )
 
 
-def get_org_ss_alerts(api_endpoint, github_pat, org_name, secret_type_filter=None):
+def get_org_ss_alerts(api_endpoint, github_pat, org_name):
     """
     Get all the secret scanning alerts on a given organization.
 
@@ -80,17 +106,43 @@ def get_org_ss_alerts(api_endpoint, github_pat, org_name, secret_type_filter=Non
     - API endpoint (for GHES/GHAE compatibility)
     - PAT of appropriate scope
     - Organization name
-    - Secret type filter (optional comma-separated list of secret types)
 
     Outputs:
-    - List of _all_ secret scanning alerts on the organization
+    - List of _all_ secret scanning alerts on the organization (both default and generic secret types)
     """
-    url = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&page=1"
-    if secret_type_filter:
-        url += f"&secret_type={secret_type_filter}"
-    ss_alerts = api_helpers.make_api_call(url, github_pat)
-    print(f"Found {len(ss_alerts)} secret scanning alerts in {org_name}")
-    return ss_alerts
+    # First call: get default secret types (without any filters)
+    url_default = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&page=1"
+    ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
+    
+    # Second call: get generic secret types with hardcoded list
+    generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
+    url_generic = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&page=1&secret_type={generic_secret_types}"
+    ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
+    
+    # Combine results and deduplicate
+    combined_alerts = []
+    alert_numbers_seen = set()
+    duplicates_found = False
+    
+    # Add default alerts
+    for alert in ss_alerts_default:
+        alert_numbers_seen.add(alert["number"])
+        combined_alerts.append(alert)
+    
+    # Add generic alerts, checking for duplicates
+    for alert in ss_alerts_generic:
+        if alert["number"] in alert_numbers_seen:
+            duplicates_found = True
+        else:
+            alert_numbers_seen.add(alert["number"])
+            combined_alerts.append(alert)
+    
+    # Warn if duplicates were found
+    if duplicates_found:
+        print(f"::warning::Duplicate secret scanning alerts detected in {org_name}. Please report this behavior via an issue to the repository owners as the API behavior may have changed.")
+    
+    print(f"Found {len(combined_alerts)} secret scanning alerts in {org_name} ({len(ss_alerts_default)} default, {len(ss_alerts_generic)} generic)")
+    return combined_alerts
 
 
 def write_org_ss_list(secrets_list):
@@ -153,7 +205,7 @@ def write_org_ss_list(secrets_list):
             )
 
 
-def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug, secret_type_filter=None):
+def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
     """
     Get all the secret scanning alerts on a given enterprise.
 
@@ -162,17 +214,43 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug, secret_t
     - PAT of appropriate scope
     - Enterprise slug (enterprise name URL, documented below)
         - https://docs.github.com/en/rest/reference/enterprise-admin
-    - Secret type filter (optional comma-separated list of secret types)
 
     Outputs:
-    - List of _all_ secret scanning alerts on the enterprise
+    - List of _all_ secret scanning alerts on the enterprise (both default and generic secret types)
     """
-    url = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&page=1"
-    if secret_type_filter:
-        url += f"&secret_type={secret_type_filter}"
-    ss_alerts = api_helpers.make_api_call(url, github_pat)
-    print(f"Found {len(ss_alerts)} secret scanning alerts in {enterprise_slug}")
-    return ss_alerts
+    # First call: get default secret types (without any filters)
+    url_default = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&page=1"
+    ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
+    
+    # Second call: get generic secret types with hardcoded list
+    generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
+    url_generic = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&page=1&secret_type={generic_secret_types}"
+    ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
+    
+    # Combine results and deduplicate
+    combined_alerts = []
+    alert_numbers_seen = set()
+    duplicates_found = False
+    
+    # Add default alerts
+    for alert in ss_alerts_default:
+        alert_numbers_seen.add(alert["number"])
+        combined_alerts.append(alert)
+    
+    # Add generic alerts, checking for duplicates
+    for alert in ss_alerts_generic:
+        if alert["number"] in alert_numbers_seen:
+            duplicates_found = True
+        else:
+            alert_numbers_seen.add(alert["number"])
+            combined_alerts.append(alert)
+    
+    # Warn if duplicates were found
+    if duplicates_found:
+        print(f"::warning::Duplicate secret scanning alerts detected in {enterprise_slug}. Please report this behavior via an issue to the repository owners as the API behavior may have changed.")
+    
+    print(f"Found {len(combined_alerts)} secret scanning alerts in {enterprise_slug} ({len(ss_alerts_default)} default, {len(ss_alerts_generic)} generic)")
+    return combined_alerts
 
 
 def write_enterprise_ss_list(secrets_list):

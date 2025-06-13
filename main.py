@@ -34,7 +34,6 @@ github_pat = os.getenv("GITHUB_PAT", os.getenv("GITHUB_TOKEN"))
 report_scope = os.getenv("GITHUB_REPORT_SCOPE", "repository")
 scope_name = os.getenv("SCOPE_NAME", os.getenv("GITHUB_REPOSITORY"))
 requested_features = os.getenv("FEATURES")
-secret_type_filter = os.getenv("SECRET_TYPE_FILTER")
 if (requested_features is None) or (requested_features == "all"):
     features = FEATURES
 else:
@@ -53,7 +52,7 @@ if __name__ == "__main__":
         # secret scanning
         if "secretscanning" in features:
             try:
-                secrets_list = secret_scanning.get_enterprise_ss_alerts(api_endpoint, github_pat, scope_name, secret_type_filter)
+                secrets_list = secret_scanning.get_enterprise_ss_alerts(api_endpoint, github_pat, scope_name)
                 secret_scanning.write_enterprise_ss_list(secrets_list)
             except Exception as e:
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
@@ -105,7 +104,7 @@ if __name__ == "__main__":
         # secret scanning
         if "secretscanning" in features:
             try:
-                secrets_list = secret_scanning.get_org_ss_alerts(api_endpoint, github_pat, scope_name, secret_type_filter)
+                secrets_list = secret_scanning.get_org_ss_alerts(api_endpoint, github_pat, scope_name)
                 secret_scanning.write_org_ss_list(secrets_list)
             except Exception as e:
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
@@ -133,7 +132,7 @@ if __name__ == "__main__":
         # secret scanning
         if "secretscanning" in features:
             try:
-                secrets_list = secret_scanning.get_repo_ss_alerts(api_endpoint, github_pat, scope_name, secret_type_filter)
+                secrets_list = secret_scanning.get_repo_ss_alerts(api_endpoint, github_pat, scope_name)
                 secret_scanning.write_repo_ss_list(secrets_list)
             except Exception as e:
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
