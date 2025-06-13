@@ -34,6 +34,8 @@ github_pat = os.getenv("GITHUB_PAT", os.getenv("GITHUB_TOKEN"))
 report_scope = os.getenv("GITHUB_REPORT_SCOPE", "repository")
 scope_name = os.getenv("SCOPE_NAME", os.getenv("GITHUB_REPOSITORY"))
 requested_features = os.getenv("FEATURES")
+# Flag to enable extended repository metadata (teams, topics, properties)
+include_repo_metadata = os.getenv("INCLUDE_REPO_METADATA", "false").lower() == "true"
 if (requested_features is None) or (requested_features == "all"):
     features = FEATURES
 else:
@@ -53,7 +55,7 @@ if __name__ == "__main__":
         if "secretscanning" in features:
             try:
                 secrets_list = secret_scanning.get_enterprise_ss_alerts(api_endpoint, github_pat, scope_name)
-                secret_scanning.write_enterprise_ss_list(secrets_list)
+                secret_scanning.write_enterprise_ss_list(secrets_list, include_repo_metadata, api_endpoint, github_pat)
             except Exception as e:
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
                     print("Skipping Secret Scanning as it is not enabled.")
@@ -69,15 +71,15 @@ if __name__ == "__main__":
             if version.startswith("3.5") or version.startswith("3.6"):
                 repo_list = enterprise.get_repo_report(url, github_pat)
                 cs_list = code_scanning.list_enterprise_server_cs_alerts(api_endpoint, github_pat, repo_list)
-                code_scanning.write_enterprise_server_cs_list(cs_list)
+                code_scanning.write_enterprise_server_cs_list(cs_list, include_repo_metadata, api_endpoint, github_pat)
             else:
                 cs_list = code_scanning.list_enterprise_cloud_cs_alerts(api_endpoint, github_pat, scope_name)
-                code_scanning.write_enterprise_cloud_cs_list(cs_list)
+                code_scanning.write_enterprise_cloud_cs_list(cs_list, include_repo_metadata, api_endpoint, github_pat)
         # dependabot alerts
         if "dependabot" in features:
             try:
                 dependabot_list = dependabot.list_enterprise_dependabot_alerts(api_endpoint, github_pat, scope_name)
-                dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
+                dependabot.write_org_or_enterprise_dependabot_list(dependabot_list, include_repo_metadata, api_endpoint, github_pat)
             except Exception as e:
                 if any(x in str(e).lower() for x in dependabot_disabled_strings):
                     print("Skipping Dependabot as it is not enabled.")
@@ -89,12 +91,12 @@ if __name__ == "__main__":
         # code scanning
         if "codescanning" in features:
             cs_list = code_scanning.list_org_cs_alerts(api_endpoint, github_pat, scope_name)
-            code_scanning.write_org_cs_list(cs_list)
+            code_scanning.write_org_cs_list(cs_list, include_repo_metadata, api_endpoint, github_pat)
         # dependabot alerts
         if "dependabot" in features:
             try:
                 dependabot_list = dependabot.list_org_dependabot_alerts(api_endpoint, github_pat, scope_name)
-                dependabot.write_org_or_enterprise_dependabot_list(dependabot_list)
+                dependabot.write_org_or_enterprise_dependabot_list(dependabot_list, include_repo_metadata, api_endpoint, github_pat)
             except Exception as e:
                 if any(x in str(e).lower() for x in dependabot_disabled_strings):
                     print("Skipping Dependabot as it is not enabled.")
@@ -105,7 +107,7 @@ if __name__ == "__main__":
         if "secretscanning" in features:
             try:
                 secrets_list = secret_scanning.get_org_ss_alerts(api_endpoint, github_pat, scope_name)
-                secret_scanning.write_org_ss_list(secrets_list)
+                secret_scanning.write_org_ss_list(secrets_list, include_repo_metadata, api_endpoint, github_pat)
             except Exception as e:
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
                     print("Skipping Secret Scanning as it is not enabled.")
@@ -117,12 +119,12 @@ if __name__ == "__main__":
         # code scanning
         if "codescanning" in features:
             cs_list = code_scanning.list_repo_cs_alerts(api_endpoint, github_pat, scope_name)
-            code_scanning.write_repo_cs_list(cs_list)
+            code_scanning.write_repo_cs_list(cs_list, include_repo_metadata, api_endpoint, github_pat, scope_name)
         # dependabot alerts
         if "dependabot" in features:
             try:
                 dependabot_list = dependabot.list_repo_dependabot_alerts(api_endpoint, github_pat, scope_name)
-                dependabot.write_repo_dependabot_list(dependabot_list)
+                dependabot.write_repo_dependabot_list(dependabot_list, include_repo_metadata, api_endpoint, github_pat, scope_name)
             except Exception as e:
                 if any(x in str(e).lower() for x in dependabot_disabled_strings):
                     print("Skipping Dependabot as it is not enabled.")
@@ -133,7 +135,7 @@ if __name__ == "__main__":
         if "secretscanning" in features:
             try:
                 secrets_list = secret_scanning.get_repo_ss_alerts(api_endpoint, github_pat, scope_name)
-                secret_scanning.write_repo_ss_list(secrets_list)
+                secret_scanning.write_repo_ss_list(secrets_list, include_repo_metadata, api_endpoint, github_pat, scope_name)
             except Exception as e:
                 if any(x in str(e).lower() for x in secret_scanning_disabled_strings):
                     print("Skipping Secret Scanning as it is not enabled.")
