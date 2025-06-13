@@ -5,7 +5,7 @@ from defusedcsv import csv
 from . import api_helpers
 
 
-def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
+def get_repo_ss_alerts(api_endpoint, github_pat, repo_name, secret_type_filter=None):
     """
     Get all the secret scanning alerts on a given repository.
 
@@ -13,11 +13,14 @@ def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
     - API endpoint (for GHES/GHAE compatibility)
     - PAT of appropriate scope
     - Repository name
+    - Secret type filter (optional comma-separated list of secret types)
 
     Outputs:
     - List of _all_ secret scanning alerts on the repository
     """
     url = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1"
+    if secret_type_filter:
+        url += f"&secret_type={secret_type_filter}"
     ss_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(ss_alerts)} secret scanning alerts in {repo_name}")
     return ss_alerts
@@ -69,7 +72,7 @@ def write_repo_ss_list(secrets_list):
             )
 
 
-def get_org_ss_alerts(api_endpoint, github_pat, org_name):
+def get_org_ss_alerts(api_endpoint, github_pat, org_name, secret_type_filter=None):
     """
     Get all the secret scanning alerts on a given organization.
 
@@ -77,11 +80,14 @@ def get_org_ss_alerts(api_endpoint, github_pat, org_name):
     - API endpoint (for GHES/GHAE compatibility)
     - PAT of appropriate scope
     - Organization name
+    - Secret type filter (optional comma-separated list of secret types)
 
     Outputs:
     - List of _all_ secret scanning alerts on the organization
     """
     url = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&page=1"
+    if secret_type_filter:
+        url += f"&secret_type={secret_type_filter}"
     ss_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(ss_alerts)} secret scanning alerts in {org_name}")
     return ss_alerts
@@ -147,7 +153,7 @@ def write_org_ss_list(secrets_list):
             )
 
 
-def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
+def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug, secret_type_filter=None):
     """
     Get all the secret scanning alerts on a given enterprise.
 
@@ -156,11 +162,14 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
     - PAT of appropriate scope
     - Enterprise slug (enterprise name URL, documented below)
         - https://docs.github.com/en/rest/reference/enterprise-admin
+    - Secret type filter (optional comma-separated list of secret types)
 
     Outputs:
     - List of _all_ secret scanning alerts on the enterprise
     """
     url = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&page=1"
+    if secret_type_filter:
+        url += f"&secret_type={secret_type_filter}"
     ss_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(ss_alerts)} secret scanning alerts in {enterprise_slug}")
     return ss_alerts
