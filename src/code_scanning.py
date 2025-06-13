@@ -394,56 +394,83 @@ def write_enterprise_cloud_cs_list(cs_list, include_repo_metadata=False, api_end
 
     with open("cs_list.csv", "a") as f:
         writer = csv.writer(f)
-        writer.writerow(
-            [
-                "repository",
-                "repo_id",
-                "number",
-                "created_at",
-                "html_url",
-                "state",
-                "fixed_at",
-                "dismissed_by",
-                "dismissed_at",
-                "dismissed_reason",
-                "rule_id",
-                "rule_severity",
-                "security_severity_level",
-                "rule_tags",
-                "rule_description",
-                "rule_name",
-                "tool_name",
-                "tool_version",
-                "most_recent_instance_ref",
-                "most_recent_instance_state",
-                "most_recent_instance_sha",
-                "instances_url",
-            ]
-        )
+        
+        # Base headers
+        headers = [
+            "repository",
+            "repo_id", 
+            "number",
+            "created_at",
+            "html_url",
+            "state",
+            "fixed_at",
+            "dismissed_by",
+            "dismissed_at",
+            "dismissed_reason",
+            "rule_id",
+            "rule_severity",
+            "security_severity_level",
+            "rule_tags",
+            "rule_description",
+            "rule_name",
+            "tool_name",
+            "tool_version",
+            "most_recent_instance_ref",
+            "most_recent_instance_state",
+            "most_recent_instance_sha",
+            "instances_url",
+        ]
+        
+        # Add extended metadata headers if enabled
+        if include_repo_metadata:
+            headers.extend([
+                "repo_teams",
+                "repo_topics", 
+                "repo_custom_properties"
+            ])
+        
+        writer.writerow(headers)
         for cs in cs_list:  # loop through each alert in the list
-            writer.writerow(
-                [
-                    cs["repository"]["full_name"],
-                    cs["repository"]["id"],
-                    cs["number"],
-                    cs["created_at"],
-                    cs["html_url"],
-                    cs["state"],
-                    cs.get("fixed_at", ""),
-                    cs.get("dismissed_by", ""),
-                    cs.get("dismissed_at", ""),
-                    cs.get("dismissed_reason", ""),
-                    cs["rule"]["id"],
-                    cs["rule"]["severity"],
-                    cs["rule"].get("security_severity_level", "N/A"),
-                    cs["rule"]["tags"],
-                    cs["rule"]["description"],
-                    cs["rule"]["name"],
-                    cs["tool"]["name"],
-                    cs["tool"]["version"],
-                    cs["most_recent_instance"]["ref"],
-                    cs["most_recent_instance"]["state"],
-                    cs["most_recent_instance"]["commit_sha"],
-                    cs["instances_url"],
-                ]
-            )
+            # Base row data
+            row_data = [
+                cs["repository"]["full_name"],
+                cs["repository"]["id"],
+                cs["number"],
+                cs["created_at"],
+                cs["html_url"],
+                cs["state"],
+                cs.get("fixed_at", ""),
+                cs.get("dismissed_by", ""),
+                cs.get("dismissed_at", ""),
+                cs.get("dismissed_reason", ""),
+                cs["rule"]["id"],
+                cs["rule"]["severity"],
+                cs["rule"].get("security_severity_level", "N/A"),
+                cs["rule"]["tags"],
+                cs["rule"]["description"],
+                cs["rule"]["name"],
+                cs["tool"]["name"],
+                cs["tool"]["version"],
+                cs["most_recent_instance"]["ref"],
+                cs["most_recent_instance"]["state"],
+                cs["most_recent_instance"]["commit_sha"],
+                cs["instances_url"],
+            ]
+            
+            # Add extended metadata if enabled
+            if include_repo_metadata and api_endpoint and github_pat:
+                try:
+                    metadata = api_helpers.get_repo_metadata(api_endpoint, github_pat, cs["repository"]["full_name"])
+                    row_data.extend([
+                        ",".join(metadata["teams"]),
+                        ",".join(metadata["topics"]),
+                        str(metadata["custom_properties"])
+                    ])
+                except Exception as e:
+                    print(f"Warning: Failed to get metadata for {cs['repository']['full_name']}: {e}")
+                    row_data.extend(["", "", ""])
+            elif include_repo_metadata:
+                # If metadata is requested but API details not provided
+                row_data.extend(["", "", ""])
+            
+            writer.writerow(row_data)

@@ -243,48 +243,75 @@ def write_enterprise_ss_list(secrets_list, include_repo_metadata=False, api_endp
     # Write secret scanning alerts to csv file
     with open("secrets_list.csv", "w") as f:
         writer = csv.writer(f)
-        writer.writerow(
-            [
-                "number",
-                "created_at",
-                "html_url",
-                "state",
-                "resolution",
-                "resolved_at",
-                "resolved_by_username",
-                "resolved_by_type",
-                "resolved_by_isadmin",
-                "secret_type",
-                "secret_type_display_name",
-                "repo_name",
-                "repo_owner",
-                "repo_owner_type",
-                "repo_owner_isadmin",
-                "repo_url",
-                "repo_isfork",
-                "repo_isprivate",
-            ]
-        )
+        
+        # Base headers
+        headers = [
+            "number",
+            "created_at",
+            "html_url",
+            "state",
+            "resolution",
+            "resolved_at",
+            "resolved_by_username",
+            "resolved_by_type",
+            "resolved_by_isadmin",
+            "secret_type",
+            "secret_type_display_name",
+            "repo_name",
+            "repo_owner",
+            "repo_owner_type",
+            "repo_owner_isadmin",
+            "repo_url",
+            "repo_isfork",
+            "repo_isprivate",
+        ]
+        
+        # Add extended metadata headers if enabled
+        if include_repo_metadata:
+            headers.extend([
+                "repo_teams",
+                "repo_topics",
+                "repo_custom_properties"
+            ])
+        
+        writer.writerow(headers)
         for alert in secrets_list:
-            writer.writerow(
-                [
-                    alert["number"],
-                    alert["created_at"],
-                    alert["html_url"],
-                    alert["state"],
-                    alert["resolution"],
-                    alert["resolved_at"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["login"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["type"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"],
-                    alert["secret_type"],
-                    alert["secret_type_display_name"],
-                    alert["repository"]["full_name"],
-                    alert["repository"]["owner"]["login"],
-                    alert["repository"]["owner"]["type"],
-                    alert["repository"]["owner"]["site_admin"],
-                    alert["repository"]["html_url"],
-                    str(alert["repository"]["fork"]),
-                    str(alert["repository"]["private"]),
-                ]
-            )
+            # Base row data
+            row_data = [
+                alert["number"],
+                alert["created_at"],
+                alert["html_url"],
+                alert["state"],
+                alert["resolution"],
+                alert["resolved_at"],
+                "" if alert["resolved_by"] is None else alert["resolved_by"]["login"],
+                "" if alert["resolved_by"] is None else alert["resolved_by"]["type"],
+                "" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"],
+                alert["secret_type"],
+                alert["secret_type_display_name"],
+                alert["repository"]["full_name"],
+                alert["repository"]["owner"]["login"],
+                alert["repository"]["owner"]["type"],
+                alert["repository"]["owner"]["site_admin"],
+                alert["repository"]["html_url"],
+                str(alert["repository"]["fork"]),
+                str(alert["repository"]["private"]),
+            ]
+            
+            # Add extended metadata if enabled
+            if include_repo_metadata and api_endpoint and github_pat:
+                try:
+                    metadata = api_helpers.get_repo_metadata(api_endpoint, github_pat, alert["repository"]["full_name"])
+                    row_data.extend([
+                        ",".join(metadata["teams"]),
+                        ",".join(metadata["topics"]),
+                        str(metadata["custom_properties"])
+                    ])
+                except Exception as e:
+                    print(f"Warning: Failed to get metadata for {alert['repository']['full_name']}: {e}")
+                    row_data.extend(["", "", ""])
+            elif include_repo_metadata:
+                # If metadata is requested but API details not provided
+                row_data.extend(["", "", ""])
+            
+            writer.writerow(row_data)
