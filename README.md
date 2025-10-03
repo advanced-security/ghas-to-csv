@@ -77,6 +77,7 @@ The list of all available options that can be set as environmental variables is 
 - `GITHUB_REPORT_SCOPE`: The scope of the report to generate. Valid values are `repository` (default), `organization`  or `enterprise`.
 - `SCOPE_NAME` or `GITHUB_REPOSITORY`: The name of the repository, organization or enterprise to generate the report for. If `SCOPE_NAME` is not set, the value of `GITHUB_REPOSITORY` is used if it is set. If neither is set, an error occurs.
 - `FEATURES`: A comma-separated list of features to include in the report. Valid values are `codescanning`, `secretscanning`, `dependabot` or simply `all`. Default value: `all`.
+- `INCLUDE_REPO_METADATA`: Include extended repository metadata (teams, topics, custom properties) in the CSV output. Valid values are `true` or `false`. Default value: `false`. **Warning**: Enabling this feature will significantly increase API calls and execution time at organization or enterprise scope.
 
 The first two are only needed if you're running this in a GitHub Enterprise Server or GitHub AE environment.  The last one is useful if you only want to get data on a specific feature.  For example, if you only want to get data on secret scanning, you can set `FEATURES` to `secretscanning`. Here's just another example how you would configure this on a GitHub Enterprise Server:
 
@@ -91,6 +92,20 @@ The first two are only needed if you're running this in a GitHub Enterprise Serv
           SCOPE_NAME: "enterprise-slug-goes-here"
           FEATURES: "secretscanning,codescanning"
 ```
+
+To include extended repository metadata (teams, topics, and custom properties) in the CSV output:
+
+```yaml
+      - name: CSV export with extended metadata
+        uses: advanced-security/ghas-to-csv@v3
+        env:
+          GITHUB_PAT: ${{ secrets.PAT }}
+          GITHUB_REPORT_SCOPE: "organization"
+          SCOPE_NAME: "org-name-goes-here"
+          INCLUDE_REPO_METADATA: "true"
+```
+
+⚠️ **Note**: The `INCLUDE_REPO_METADATA` feature will make additional API calls for each repository to fetch teams, topics, and custom properties. This can significantly increase execution time and API usage when used at organization or enterprise scope.
 
 ## Reporting
 
