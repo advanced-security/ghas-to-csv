@@ -18,12 +18,12 @@ def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
     - List of _all_ secret scanning alerts on the repository (both default and generic secret types)
     """
     # First call: get default secret types (without any filters)
-    url_default = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1"
+    url_default = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?hide_secret=true&per_page=100&page=1"
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
     # Second call: get generic secret types with hardcoded list
     generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
-    url_generic = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1&secret_type={generic_secret_types}"
+    url_generic = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?hide_secret=true&per_page=100&page=1&secret_type={generic_secret_types}"
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
     # Combine results and deduplicate
