@@ -8,6 +8,10 @@ on:
 jobs:
   stale:
     name: Destalinate!
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Close stale issues and pull requests
