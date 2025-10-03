@@ -8,6 +8,11 @@ on:
 jobs:
   stale:
     name: Destalinate!
+    permissions:
+      actions: write
+      #contents: write # only for delete-branch option
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Close stale issues and pull requests
