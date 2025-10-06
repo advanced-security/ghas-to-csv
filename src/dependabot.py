@@ -17,7 +17,7 @@ def list_repo_dependabot_alerts(api_endpoint, github_pat, repo_name):
     Outputs:
     - List of _all_ dependency alerts on the repository
     """
-    url = f"{api_endpoint}/repos/{repo_name}/dependabot/alerts?per_page=100&page=1"
+    url = f"{api_endpoint}/repos/{repo_name}/dependabot/alerts?per_page=100&after="
     dependabot_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(dependabot_alerts)} dependabot alerts in {repo_name}")
     return dependabot_alerts
@@ -90,7 +90,7 @@ def list_org_dependabot_alerts(api_endpoint, github_pat, org_name):
     Outputs:
     - List of _all_ dependency alerts on the organization
     """
-    url = f"{api_endpoint}/orgs/{org_name}/dependabot/alerts?per_page=100&page=1"
+    url = f"{api_endpoint}/orgs/{org_name}/dependabot/alerts?per_page=100&after="
     dependabot_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(dependabot_alerts)} dependabot alerts in {org_name}")
     return dependabot_alerts
@@ -109,7 +109,7 @@ def list_enterprise_dependabot_alerts(api_endpoint, github_pat, enterprise_slug)
     Outputs:
     - List of _all_ dependency alerts on the enterprise
     """
-    url = f"{api_endpoint}/enterprises/{enterprise_slug}/dependabot/alerts?per_page=100&page=1"
+    url = f"{api_endpoint}/enterprises/{enterprise_slug}/dependabot/alerts?per_page=100&after="
     dependabot_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(dependabot_alerts)} dependabot alerts in {enterprise_slug}")
     return dependabot_alerts
