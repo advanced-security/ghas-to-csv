@@ -113,21 +113,9 @@ def write_repo_ss_list(secrets_list):
                     alert["state"],
                     alert["resolution"],
                     alert["resolved_at"],
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["login"]
-                    ),
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["type"]
-                    ),
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["site_admin"]
-                    ),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["login"]),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["type"]),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"]),
                     alert.get("resolution_comment", ""),
                     alert["secret_type"],
                     alert["secret_type_display_name"],
@@ -140,16 +128,8 @@ def write_repo_ss_list(secrets_list):
                     or first_location.get("issue_body_url")
                     or first_location.get("discussion_body_url")
                     or "",
-                    (
-                        ""
-                        if first_location is None
-                        else first_location.get("start_line", "")
-                    ),
-                    (
-                        ""
-                        if first_location is None
-                        else first_location.get("commit_sha", "")
-                    ),
+                    ("" if first_location is None else first_location.get("start_line", "")),
+                    ("" if first_location is None else first_location.get("commit_sha", "")),
                     str(alert["push_protection_bypassed"]),
                     (
                         ""
@@ -160,18 +140,12 @@ def write_repo_ss_list(secrets_list):
                     (
                         ""
                         if alert.get("push_protection_bypass_request_reviewer") is None
-                        else alert["push_protection_bypass_request_reviewer"].get(
-                            "login", ""
-                        )
+                        else alert["push_protection_bypass_request_reviewer"].get("login", "")
                     ),
                     alert.get("push_protection_bypass_request_reviewer_comment", ""),
                     alert.get("push_protection_bypass_request_comment", ""),
                     alert.get("push_protection_bypass_request_html_url", ""),
-                    (
-                        ""
-                        if alert.get("assigned_to") is None
-                        else alert["assigned_to"].get("login", "")
-                    ),
+                    ("" if alert.get("assigned_to") is None else alert["assigned_to"].get("login", "")),
                 ]
             )
 
@@ -293,21 +267,9 @@ def write_org_ss_list(secrets_list):
                     alert["state"],
                     alert["resolution"],
                     alert["resolved_at"],
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["login"]
-                    ),
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["type"]
-                    ),
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["site_admin"]
-                    ),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["login"]),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["type"]),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"]),
                     alert.get("resolution_comment", ""),
                     alert["secret_type"],
                     alert["secret_type_display_name"],
@@ -320,16 +282,8 @@ def write_org_ss_list(secrets_list):
                     or first_location.get("issue_body_url")
                     or first_location.get("discussion_body_url")
                     or "",
-                    (
-                        ""
-                        if first_location is None
-                        else first_location.get("start_line", "")
-                    ),
-                    (
-                        ""
-                        if first_location is None
-                        else first_location.get("commit_sha", "")
-                    ),
+                    ("" if first_location is None else first_location.get("start_line", "")),
+                    ("" if first_location is None else first_location.get("commit_sha", "")),
                     str(alert["push_protection_bypassed"]),
                     (
                         ""
@@ -340,18 +294,12 @@ def write_org_ss_list(secrets_list):
                     (
                         ""
                         if alert.get("push_protection_bypass_request_reviewer") is None
-                        else alert["push_protection_bypass_request_reviewer"].get(
-                            "login", ""
-                        )
+                        else alert["push_protection_bypass_request_reviewer"].get("login", "")
                     ),
                     alert.get("push_protection_bypass_request_reviewer_comment", ""),
                     alert.get("push_protection_bypass_request_comment", ""),
                     alert.get("push_protection_bypass_request_html_url", ""),
-                    (
-                        ""
-                        if alert.get("assigned_to") is None
-                        else alert["assigned_to"].get("login", "")
-                    ),
+                    ("" if alert.get("assigned_to") is None else alert["assigned_to"].get("login", "")),
                     alert["repository"]["full_name"],
                     alert["repository"]["owner"]["login"],
                     alert["repository"]["owner"]["type"],
@@ -377,7 +325,9 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
     - List of _all_ secret scanning alerts on the enterprise (both default and generic secret types)
     """
     # First call: get default secret types (without any filters), use after= to force object based cursor instead of page based
-    url_default = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&after=&hide_secret=true"
+    url_default = (
+        f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&after=&hide_secret=true"
+    )
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
     # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
@@ -489,21 +439,9 @@ def write_enterprise_ss_list(secrets_list):
                     alert["state"],
                     alert["resolution"],
                     alert["resolved_at"],
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["login"]
-                    ),
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["type"]
-                    ),
-                    (
-                        ""
-                        if alert["resolved_by"] is None
-                        else alert["resolved_by"]["site_admin"]
-                    ),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["login"]),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["type"]),
+                    ("" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"]),
                     alert.get("resolution_comment", ""),
                     alert["secret_type"],
                     alert["secret_type_display_name"],
@@ -516,16 +454,8 @@ def write_enterprise_ss_list(secrets_list):
                     or first_location.get("issue_body_url")
                     or first_location.get("discussion_body_url")
                     or "",
-                    (
-                        ""
-                        if first_location is None
-                        else first_location.get("start_line", "")
-                    ),
-                    (
-                        ""
-                        if first_location is None
-                        else first_location.get("commit_sha", "")
-                    ),
+                    ("" if first_location is None else first_location.get("start_line", "")),
+                    ("" if first_location is None else first_location.get("commit_sha", "")),
                     str(alert["push_protection_bypassed"]),
                     (
                         ""
@@ -536,18 +466,12 @@ def write_enterprise_ss_list(secrets_list):
                     (
                         ""
                         if alert.get("push_protection_bypass_request_reviewer") is None
-                        else alert["push_protection_bypass_request_reviewer"].get(
-                            "login", ""
-                        )
+                        else alert["push_protection_bypass_request_reviewer"].get("login", "")
                     ),
                     alert.get("push_protection_bypass_request_reviewer_comment", ""),
                     alert.get("push_protection_bypass_request_comment", ""),
                     alert.get("push_protection_bypass_request_html_url", ""),
-                    (
-                        ""
-                        if alert.get("assigned_to") is None
-                        else alert["assigned_to"].get("login", "")
-                    ),
+                    ("" if alert.get("assigned_to") is None else alert["assigned_to"].get("login", "")),
                     alert["repository"]["full_name"],
                     alert["repository"]["owner"]["login"],
                     alert["repository"]["owner"]["type"],
