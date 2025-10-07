@@ -113,9 +113,21 @@ def write_repo_ss_list(secrets_list):
                     alert["state"],
                     alert["resolution"],
                     alert["resolved_at"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["login"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["type"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"],
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["login"]
+                    ),
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["type"]
+                    ),
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["site_admin"]
+                    ),
                     alert.get("resolution_comment", ""),
                     alert["secret_type"],
                     alert["secret_type_display_name"],
@@ -123,17 +135,43 @@ def write_repo_ss_list(secrets_list):
                     str(alert["publicly_leaked"]),
                     str(alert["multi_repo"]),
                     str(alert["is_base64_encoded"]),
-                    first_location.get("path") or first_location.get("pull_request_body_url") or first_location.get("issue_body_url") or first_location.get("discussion_body_url") or "",
-                    "" if first_location is None else first_location.get("start_line", ""),
-                    "" if first_location is None else first_location.get("commit_sha", ""),
+                    first_location.get("path")
+                    or first_location.get("pull_request_body_url")
+                    or first_location.get("issue_body_url")
+                    or first_location.get("discussion_body_url")
+                    or "",
+                    (
+                        ""
+                        if first_location is None
+                        else first_location.get("start_line", "")
+                    ),
+                    (
+                        ""
+                        if first_location is None
+                        else first_location.get("commit_sha", "")
+                    ),
                     str(alert["push_protection_bypassed"]),
-                    "" if alert.get("push_protection_bypassed_by") is None else alert["push_protection_bypassed_by"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("push_protection_bypassed_by") is None
+                        else alert["push_protection_bypassed_by"].get("login", "")
+                    ),
                     alert.get("push_protection_bypassed_at", ""),
-                    "" if alert.get("push_protection_bypass_request_reviewer") is None else alert["push_protection_bypass_request_reviewer"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("push_protection_bypass_request_reviewer") is None
+                        else alert["push_protection_bypass_request_reviewer"].get(
+                            "login", ""
+                        )
+                    ),
                     alert.get("push_protection_bypass_request_reviewer_comment", ""),
                     alert.get("push_protection_bypass_request_comment", ""),
                     alert.get("push_protection_bypass_request_html_url", ""),
-                    "" if alert.get("assigned_to") is None else alert["assigned_to"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("assigned_to") is None
+                        else alert["assigned_to"].get("login", "")
+                    ),
                 ]
             )
 
@@ -156,9 +194,7 @@ def get_org_ss_alerts(api_endpoint, github_pat, org_name):
 
     # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
     generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
-    url_generic = (
-        f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}&hide_secret=true"
-    )
+    url_generic = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}&hide_secret=true"
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
     # Combine results and deduplicate using composite key (repo + alert number)
@@ -257,9 +293,21 @@ def write_org_ss_list(secrets_list):
                     alert["state"],
                     alert["resolution"],
                     alert["resolved_at"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["login"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["type"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"],
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["login"]
+                    ),
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["type"]
+                    ),
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["site_admin"]
+                    ),
                     alert.get("resolution_comment", ""),
                     alert["secret_type"],
                     alert["secret_type_display_name"],
@@ -267,17 +315,43 @@ def write_org_ss_list(secrets_list):
                     str(alert["publicly_leaked"]),
                     str(alert["multi_repo"]),
                     str(alert["is_base64_encoded"]),
-                    first_location.get("path") or first_location.get("pull_request_body_url") or first_location.get("issue_body_url") or first_location.get("discussion_body_url") or "",
-                    "" if first_location is None else first_location.get("start_line", ""),
-                    "" if first_location is None else first_location.get("commit_sha", ""),
+                    first_location.get("path")
+                    or first_location.get("pull_request_body_url")
+                    or first_location.get("issue_body_url")
+                    or first_location.get("discussion_body_url")
+                    or "",
+                    (
+                        ""
+                        if first_location is None
+                        else first_location.get("start_line", "")
+                    ),
+                    (
+                        ""
+                        if first_location is None
+                        else first_location.get("commit_sha", "")
+                    ),
                     str(alert["push_protection_bypassed"]),
-                    "" if alert.get("push_protection_bypassed_by") is None else alert["push_protection_bypassed_by"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("push_protection_bypassed_by") is None
+                        else alert["push_protection_bypassed_by"].get("login", "")
+                    ),
                     alert.get("push_protection_bypassed_at", ""),
-                    "" if alert.get("push_protection_bypass_request_reviewer") is None else alert["push_protection_bypass_request_reviewer"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("push_protection_bypass_request_reviewer") is None
+                        else alert["push_protection_bypass_request_reviewer"].get(
+                            "login", ""
+                        )
+                    ),
                     alert.get("push_protection_bypass_request_reviewer_comment", ""),
                     alert.get("push_protection_bypass_request_comment", ""),
                     alert.get("push_protection_bypass_request_html_url", ""),
-                    "" if alert.get("assigned_to") is None else alert["assigned_to"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("assigned_to") is None
+                        else alert["assigned_to"].get("login", "")
+                    ),
                     alert["repository"]["full_name"],
                     alert["repository"]["owner"]["login"],
                     alert["repository"]["owner"]["type"],
@@ -321,7 +395,7 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
         alert_key = (
             alert["repository"]["owner"]["login"],
             alert["repository"]["name"],
-            alert["number"]
+            alert["number"],
         )
         alert_keys_seen.add(alert_key)
         combined_alerts.append(alert)
@@ -331,7 +405,7 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
         alert_key = (
             alert["repository"]["owner"]["login"],
             alert["repository"]["name"],
-            alert["number"]
+            alert["number"],
         )
         if alert_key in alert_keys_seen:
             duplicates_found = True
@@ -415,9 +489,21 @@ def write_enterprise_ss_list(secrets_list):
                     alert["state"],
                     alert["resolution"],
                     alert["resolved_at"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["login"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["type"],
-                    "" if alert["resolved_by"] is None else alert["resolved_by"]["site_admin"],
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["login"]
+                    ),
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["type"]
+                    ),
+                    (
+                        ""
+                        if alert["resolved_by"] is None
+                        else alert["resolved_by"]["site_admin"]
+                    ),
                     alert.get("resolution_comment", ""),
                     alert["secret_type"],
                     alert["secret_type_display_name"],
@@ -425,17 +511,43 @@ def write_enterprise_ss_list(secrets_list):
                     str(alert["publicly_leaked"]),
                     str(alert["multi_repo"]),
                     str(alert["is_base64_encoded"]),
-                    first_location.get("path") or first_location.get("pull_request_body_url") or first_location.get("issue_body_url") or first_location.get("discussion_body_url") or "",
-                    "" if first_location is None else first_location.get("start_line", ""),
-                    "" if first_location is None else first_location.get("commit_sha", ""),
+                    first_location.get("path")
+                    or first_location.get("pull_request_body_url")
+                    or first_location.get("issue_body_url")
+                    or first_location.get("discussion_body_url")
+                    or "",
+                    (
+                        ""
+                        if first_location is None
+                        else first_location.get("start_line", "")
+                    ),
+                    (
+                        ""
+                        if first_location is None
+                        else first_location.get("commit_sha", "")
+                    ),
                     str(alert["push_protection_bypassed"]),
-                    "" if alert.get("push_protection_bypassed_by") is None else alert["push_protection_bypassed_by"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("push_protection_bypassed_by") is None
+                        else alert["push_protection_bypassed_by"].get("login", "")
+                    ),
                     alert.get("push_protection_bypassed_at", ""),
-                    "" if alert.get("push_protection_bypass_request_reviewer") is None else alert["push_protection_bypass_request_reviewer"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("push_protection_bypass_request_reviewer") is None
+                        else alert["push_protection_bypass_request_reviewer"].get(
+                            "login", ""
+                        )
+                    ),
                     alert.get("push_protection_bypass_request_reviewer_comment", ""),
                     alert.get("push_protection_bypass_request_comment", ""),
                     alert.get("push_protection_bypass_request_html_url", ""),
-                    "" if alert.get("assigned_to") is None else alert["assigned_to"].get("login", ""),
+                    (
+                        ""
+                        if alert.get("assigned_to") is None
+                        else alert["assigned_to"].get("login", "")
+                    ),
                     alert["repository"]["full_name"],
                     alert["repository"]["owner"]["login"],
                     alert["repository"]["owner"]["type"],
