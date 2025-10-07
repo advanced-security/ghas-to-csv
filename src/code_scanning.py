@@ -17,7 +17,7 @@ def list_repo_cs_alerts(api_endpoint, github_pat, repo_name):
     Outputs:
     - List of _all_ code scanning alerts on the repository
     """
-    url = f"{api_endpoint}/repos/{repo_name}/code-scanning/alerts?per_page=100&page=1"
+    url = f"{api_endpoint}/repos/{repo_name}/code-scanning/alerts?per_page=100&after="
     code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(code_scanning_alerts)} code scanning alerts in {repo_name}")
     return code_scanning_alerts
@@ -104,7 +104,7 @@ def list_org_cs_alerts(api_endpoint, github_pat, org_name):
     - List of _all_ code scanning alerts on the organization
     """
 
-    url = f"{api_endpoint}/orgs/{org_name}/code-scanning/alerts?per_page=100&page=1"
+    url = f"{api_endpoint}/orgs/{org_name}/code-scanning/alerts?per_page=100&after="
     code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(code_scanning_alerts)} code scanning alerts in {org_name}")
     return code_scanning_alerts
@@ -306,7 +306,7 @@ def list_enterprise_cloud_cs_alerts(api_endpoint, github_pat, enterprise_slug):
     - List of _all_ code scanning alerts in enterprise that PAT user can access
     """
 
-    url = f"{api_endpoint}/enterprises/{enterprise_slug}/code-scanning/alerts?per_page=100&page=1"
+    url = f"{api_endpoint}/enterprises/{enterprise_slug}/code-scanning/alerts?per_page=100&after="
     code_scanning_alerts = api_helpers.make_api_call(url, github_pat)
     print(f"Found {len(code_scanning_alerts)} code scanning alerts in {enterprise_slug}")
     return code_scanning_alerts

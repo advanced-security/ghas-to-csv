@@ -17,13 +17,13 @@ def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
     Outputs:
     - List of _all_ secret scanning alerts on the repository (both default and generic secret types)
     """
-    # First call: get default secret types (without any filters)
-    url_default = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1"
+    # First call: get default secret types (without any filters), use after= to force object based cursor instead of page based
+    url_default = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&after="
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
-    # Second call: get generic secret types with hardcoded list
+    # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
     generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
-    url_generic = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&page=1&secret_type={generic_secret_types}"
+    url_generic = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}"
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
     # Combine results and deduplicate
@@ -114,14 +114,14 @@ def get_org_ss_alerts(api_endpoint, github_pat, org_name):
     Outputs:
     - List of _all_ secret scanning alerts on the organization (both default and generic secret types)
     """
-    # First call: get default secret types (without any filters)
-    url_default = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&page=1"
+    # First call: get default secret types (without any filters), use after= to force object based cursor instead of page based
+    url_default = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&after="
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
-    # Second call: get generic secret types with hardcoded list
+    # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
     generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
     url_generic = (
-        f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&page=1&secret_type={generic_secret_types}"
+        f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}"
     )
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
@@ -228,13 +228,13 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
     Outputs:
     - List of _all_ secret scanning alerts on the enterprise (both default and generic secret types)
     """
-    # First call: get default secret types (without any filters)
-    url_default = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&page=1"
+    # First call: get default secret types (without any filters), use after= to force object based cursor instead of page based
+    url_default = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&after="
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
-    # Second call: get generic secret types with hardcoded list
+    # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
     generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
-    url_generic = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&page=1&secret_type={generic_secret_types}"
+    url_generic = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}"
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
     # Combine results and deduplicate
