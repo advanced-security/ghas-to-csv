@@ -22,7 +22,7 @@ def get_repo_ss_alerts(api_endpoint, github_pat, repo_name):
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
     # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
-    generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
+    generic_secret_types = "password,ec_private_key,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
     url_generic = f"{api_endpoint}/repos/{repo_name}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}&hide_secret=true"
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
@@ -167,7 +167,7 @@ def get_org_ss_alerts(api_endpoint, github_pat, org_name):
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
     # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
-    generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
+    generic_secret_types = "password,ec_private_key,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
     url_generic = f"{api_endpoint}/orgs/{org_name}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}&hide_secret=true"
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
@@ -331,7 +331,7 @@ def get_enterprise_ss_alerts(api_endpoint, github_pat, enterprise_slug):
     ss_alerts_default = api_helpers.make_api_call(url_default, github_pat)
 
     # Second call: get generic secret types with hardcoded list, use after= to force object based cursor instead of page based
-    generic_secret_types = "password,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
+    generic_secret_types = "password,ec_private_key,http_basic_authentication_header,http_bearer_authentication_header,mongodb_connection_string,mysql_connection_string,openssh_private_key,pgp_private_key,postgres_connection_string,rsa_private_key"
     url_generic = f"{api_endpoint}/enterprises/{enterprise_slug}/secret-scanning/alerts?per_page=100&after=&secret_type={generic_secret_types}&hide_secret=true"
     ss_alerts_generic = api_helpers.make_api_call(url_generic, github_pat)
 
