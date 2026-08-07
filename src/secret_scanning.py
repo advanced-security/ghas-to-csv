@@ -120,7 +120,7 @@ def write_repo_ss_list(secrets_list):
                     alert["secret_type"],
                     alert["secret_type_display_name"],
                     alert["validity"],
-                    str(alert["publicly_leaked"]),
+                    ("" if alert["publicly_leaked"] is None else str(alert["publicly_leaked"])),
                     str(alert["multi_repo"]),
                     str(alert["is_base64_encoded"]),
                     first_location.get("path")
