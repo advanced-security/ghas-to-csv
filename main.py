@@ -34,14 +34,28 @@ github_pat = os.getenv("GITHUB_PAT", os.getenv("GITHUB_TOKEN"))
 report_scope = os.getenv("GITHUB_REPORT_SCOPE", "repository")
 scope_name = os.getenv("SCOPE_NAME", os.getenv("GITHUB_REPOSITORY"))
 requested_features = os.getenv("FEATURES")
+
+
+def parse_features(requested):
+    """Filter a comma-separated feature list down to known feature names.
+
+    Unknown names are reported and dropped. A new list is built instead of
+    removing entries while iterating, which would skip over entries and let
+    invalid feature names slip through (e.g. "bad1,bad2,x" keeps "bad2").
+    """
+    features = []
+    for f in requested.split(","):
+        if f not in FEATURES:
+            print(f"Invalid feature: {f}. Proceeding without. Valid features are: {FEATURES}")
+        else:
+            features.append(f)
+    return features
+
+
 if (requested_features is None) or (requested_features == "all"):
     features = FEATURES
 else:
-    features = requested_features.split(",")
-    for f in features:
-        if f not in FEATURES:
-            print(f"Invalid feature: {f}. Proceeding without. Valid features are: {FEATURES}")
-            features.remove(f)
+    features = parse_features(requested_features)
 
 
 # Do the things!
